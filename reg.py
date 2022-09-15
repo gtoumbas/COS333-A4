@@ -23,16 +23,12 @@ def main():
 
     # Parse the arguments
     args = parser.parse_args()
-    # print(type(args))
+
+    # Need to check for valid args (either here or in regDB)
 
     db = RegDB(DB_NAME)
     result = db.query(args)
-    # print(result)
-
-
-    # Check if the arguments are valid
-    # if not args_are_valid(args):
-        # exit(2)
+    db.display_table(result)
 
 
 
