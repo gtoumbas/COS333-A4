@@ -3,8 +3,26 @@ import sqlite3
 import textwrap
 
 # TODO Error handling, Protetction from sql injection 
+# Maybe should be using dicts
 
 class RegDB:
+
+    # Should maybe do something similar when doing searching =
+    DETAILS_COLUMNS = [
+        "Course Id",
+        "Days",
+        "Start Time",
+        "End Time",
+        "Building",
+        "Room",
+        "Department",
+        "Course Number",
+        "Area",
+        "Title",
+        "Description",
+        "Prerequisites",
+        "Professor"
+    ]
     
     def __init__(self, db_path):
         self.conn = sqlite3.connect(db_path)
@@ -12,13 +30,22 @@ class RegDB:
 
         # Throw error if table missing certain columns
         # Error if db path is wrong
-    
 
     def close(self):
         self.conn.close()
 
 
-    def args_to_SQL(self, args):
+    def search(self, args):
+        """ 
+        Searches the database and displays the results.
+        """
+
+        query = self.get_search_query(args)
+        results = self.cur.execute(query).fetchall()
+        self.display_table(results)
+
+
+    def get_search_query(self, args):
         """ 
         Returns a SQL query based on the arguments. 
         Could just join all but classes table by courseid
@@ -64,17 +91,55 @@ class RegDB:
         return query
 
 
-
-        
-    def query(self, args):
+    def get_details_query(self, classid):
         """ 
-        Queries the database and returns the results.
+        Returns a SQL query based on the arguments. 
+        Could just join all but classes table by courseid
         """
-        query = self.args_to_SQL(args)
-        # TODO protect from sql injection
+        # TODO Error handling 
+        query = """
+        SELECT classes.courseid, days, starttime, endtime, bldg, roomnum, dept, coursenum, area, title, descrip, prereqs, profname 
+        FROM classes
+        INNER JOIN courses ON classes.courseid = courses.courseid
+        INNER JOIN crosslistings ON classes.courseid = crosslistings.courseid
+        INNER JOIN coursesprofs ON classes.courseid = coursesprofs.courseid
+        INNER JOIN profs ON coursesprofs.profid = profs.profid
+        """
 
-        result = self.cur.execute(query)
-        return result.fetchall() 
+        # Add where clauses 
+        where = f"WHERE classid = {classid}"
+
+        # Add where to query
+        query += where
+
+        return query
+
+
+    def get_details(self, classid):
+        """ 
+        Searches the database and displays the results.
+        """
+
+        query = self.get_details_query(classid)
+        results = self.cur.execute(query).fetchone()
+        result_dict = dict(zip(self.DETAILS_COLUMNS, results))
+        self.display_details(result_dict)
+
+
+    # Results is a dict here    
+    def display_details(self, results):
+        print(f"Course Id: {results['Course Id']}\n")
+        print(f"Days: {results['Days']}")
+        print(f"Start Time: {results['Start Time']}")
+        print(f"End Time: {results['End Time']}")
+        print(f"Building: {results['Building']}")
+        print(f"Room: {results['Room']}\n")
+        print(f"Department and Number: {results['Department']} {results['Course Number']}\n")
+        print(f"Area: {results['Area']}\n")
+        print(f"Title: {results['Title']}\n")
+        print(f"Description: {results['Description']}\n") # TODO Need to wrap
+        print(f"Prerequisites: {results['Prerequisites']}\n")
+        print(f"Professor: {results['Professor']}")
 
 
     def display_table(self, results, maxLen=72):
@@ -97,6 +162,7 @@ class RegDB:
 
         for r in results:
             classid, dept, coursenum, area, title = r
+
             # Right aligning columns except title
             line = f"{classid:>5} {dept:>4} {coursenum:>6} {area:>4} {title}"
             len_without_title = len(line) - len(title)
@@ -104,7 +170,6 @@ class RegDB:
             line = "".join(textwrap.wrap(line, maxLen, subsequent_indent="\n" + " " * len_without_title))
             print(line)
             
-
 
 
 
