@@ -6,6 +6,7 @@ Description: TODO
 """
 import argparse
 import sqlite3
+from regDB import RegDB
 
 DB_NAME = 'reg.sqlite'
 
@@ -22,10 +23,16 @@ def main():
 
     # Parse the arguments
     args = parser.parse_args()
+    # print(type(args))
+
+    db = RegDB(DB_NAME)
+    result = db.query(args)
+    # print(result)
+
 
     # Check if the arguments are valid
-    if not argsAreValid(args):
-        exit(2)
+    # if not args_are_valid(args):
+        # exit(2)
 
 
 
@@ -33,34 +40,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-def argsAreValid(args):
-    """ 
-    Returns True if the arguments are valid, False otherwise. 
-    """
-    # TODO Implement
-    return True
-
-
-def argsToSQL(args):
-    """ 
-    Returns a SQL query based on the arguments. 
-    """
-    # TODO Implement
-    return ""
-
-
-def printResults(results):
-    """ 
-    Prints the results of the query. 
-    """
-    # TODO Implement
-    pass
-
-
-# Need to be able to search by department, course number, distrib area, course title
-# Should also create a function which displays results in a table
-# Could to single function that queries databse E.g
-# searchDB(args)
-
-# Could also have a function for each search type
