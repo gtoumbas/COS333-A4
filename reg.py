@@ -27,8 +27,10 @@ def main():
     # Need to check for valid args (either here or in regDB)
 
     db = RegDB(DB_NAME)
-    # db.search(args)
-    db.get_details(8321) # TODO write this into reg details
+    db.search(args)
+
+
+    # db.get_details(8321) # TODO write this into reg details
 
     db.close()
 

@@ -8,7 +8,6 @@ import textwrap
 class RegDB:
 
     # Should maybe do something similar when doing searching
-    # FIXME Should these be hardcoded?
     DETAILS_COLUMNS = [
         "Course Id",
         "Days",
@@ -34,8 +33,6 @@ class RegDB:
 
     def close(self):
         self.conn.close()
-
-
 
 
     def search(self, args):
