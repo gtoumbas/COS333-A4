@@ -7,7 +7,8 @@ import textwrap
 
 class RegDB:
 
-    # Should maybe do something similar when doing searching =
+    # Should maybe do something similar when doing searching
+    # FIXME Should these be hardcoded?
     DETAILS_COLUMNS = [
         "Course Id",
         "Days",
@@ -35,6 +36,8 @@ class RegDB:
         self.conn.close()
 
 
+
+
     def search(self, args):
         """ 
         Searches the database and displays the results.
@@ -45,6 +48,20 @@ class RegDB:
         self.display_table(results)
 
 
+    def get_details(self, classid):
+        """ 
+        Searches the database and displays the results.
+        """
+        # TODO Error and input handling
+
+        query = self.get_details_query(classid)
+        results = self.cur.execute(query).fetchone()
+        result_dict = dict(zip(self.DETAILS_COLUMNS, results))
+        self.display_details(result_dict)
+
+
+    # FIXME This seems really messy
+    # Should the columns be hardcoded? Or should we pass em in as args? 
     def get_search_query(self, args):
         """ 
         Returns a SQL query based on the arguments. 
@@ -78,7 +95,7 @@ class RegDB:
         if where != "WHERE ":
             where = where[:-5]
         else:
-            # There were no conditions (Not sure what to do)
+            # FIXME There were no conditions (Not sure what to do)
             where = ""
 
         # Add where to query
@@ -114,19 +131,8 @@ class RegDB:
 
         return query
 
-
-    def get_details(self, classid):
-        """ 
-        Searches the database and displays the results.
-        """
-
-        query = self.get_details_query(classid)
-        results = self.cur.execute(query).fetchone()
-        result_dict = dict(zip(self.DETAILS_COLUMNS, results))
-        self.display_details(result_dict)
-
-
     # Results is a dict here    
+    # This is ugly 
     def display_details(self, results):
         print(f"Course Id: {results['Course Id']}\n")
         print(f"Days: {results['Days']}")
