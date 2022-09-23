@@ -138,19 +138,13 @@ class RegDB:
         print(detail_output)
 
 
-    def display_table(self, results, maxLen=72):
+    def display_table(self, results, max_len=72):
         """ 
         Creates a table from the results of sql query.
         """
-        # Uses textwrap to wrap long titles to multiple lines
-        # Titles are underlined
-        # Max width of table is 72 chars
-        # Column widths are determined by the longest string in each column
-        # Each line needs to end after a word not within
 
-        # ClsId Dept CrsNum Area Title
-        # ----- ---- ------ ---- -----
-
+        # Adjusts for newline
+        max_len += 1
         header = "ClsId Dept CrsNum Area Title"
         underline = "----- ---- ------ ---- -----"
         print(header)
@@ -162,8 +156,8 @@ class RegDB:
             # Right aligning columns except title. Info from https://docs.python.org/3/library/string.html
             line = f"{classid:>5} {dept:>4} {coursenum:>6} {area:>4} {title}"
             len_without_title = len(line) - len(title)
-
-            line = "".join(textwrap.wrap(line, maxLen, subsequent_indent="\n" + " " * len_without_title))
+            
+            line = "".join(textwrap.wrap(line, max_len, subsequent_indent="\n" + " " * len_without_title))
             print(line)
             
 
