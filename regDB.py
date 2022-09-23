@@ -155,5 +155,5 @@ class RegDB:
             len_without_title = len(line) - len(title)
 
             line = "".join(textwrap.wrap(line, max_len, subsequent_indent="\n" +
-                           " " * len_without_title, break_long_words=False, fix_sentence_endings=True))
+                           " " * len_without_title, break_long_words=False))
             print(line)
