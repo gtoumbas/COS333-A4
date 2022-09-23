@@ -1,8 +1,8 @@
 # Reads arguments from reg_test_args.txt and regdetails_test_args.txt
 # Compares both output and errors outputed 
 
-CORRECT_REG="reg.py"
-CORRECT_REGDETAILS="regdetails.py"
+CORRECT_REG="/u/cos333/Asgt1Solution/ref_reg.pyc"
+CORRECT_REGDETAILS="/u/cos333/Asgt1Solution/ref_regdetails.pyc"
 
 OUR_REG="reg.py"
 OUR_REGDETAILS="regdetails.py"
