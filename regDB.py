@@ -39,8 +39,7 @@ class RegDB:
 
         query = self.get_details_query(classID)
         results = self.cur.execute(query).fetchone()
-        print(results)
-        # self.display_details(results)
+        self.display_details(results)
 
     # FIXME This seems really messy
 
@@ -119,21 +118,22 @@ class RegDB:
         if len(results) != NUM_COLUMNS:
             sys.stderr.write("Error: Invalid number items in details display")
             sys.exit(1)
+        
+        wrapped_descrip = textwrap.fill(f"Description: {results[10]}", 72, break_long_words=False)
+        wrapped_title = textwrap.fill(f"Title: {results[9]}", 72, break_long_words=False)
 
-        detail_output = f"Course ID: {results[0]}\n\n" + \
-                        f"Days: {results[1]}\n" + \
-                        f"Start Time: {results[2]}\n" + \
-                        f"End Time: {results[3]}\n" + \
-                        f"Building: {results[4]}\n" + \
-                        f"Room: {results[5]}\n\n" + \
-                        f"Dept and Number: {results[6]}\n" + \
-                        f"Area: {results[8]}\n" + \
-                        f"Title: {results[9]}\n" + \
-                        f"Description: {results[10]}\n\n" + \
-                        f"Prerequisites: {results[11]}\n\n" + \
-                        f"Professor: {results[12]}"
-
-        print(detail_output)
+        print(f"Course ID: {results[0]}\n")
+        print(f"Days: {results[1]}\n")
+        print(f"Start Time: {results[2]}\n")
+        print(f"End Time: {results[3]}\n")
+        print(f"Building: {results[4]}\n")
+        print(f"Room Number: {results[5]}\n")
+        print(f"Dept and Number: {results[6]} {results[7]}\n")
+        print(f"Area: {results[8]}\n")
+        print(f"{wrapped_title}\n")
+        print(f"{wrapped_descrip}\n")
+        print(f"Prerequisites: {results[11]}\n")
+        print(f"Professor: {results[12]}\n")
 
     def display_table(self, results, max_len=72):
         """ 
