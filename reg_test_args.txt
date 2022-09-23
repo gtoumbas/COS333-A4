@@ -1,0 +1,17 @@
+
+-d COS
+-n 333
+-n b
+-a Qr
+-t intro
+-t science
+-t C_S
+-t c%S
+-d cos -n 3
+-d cos -a qr -n 2 -t intro
+-t "Independent Study"
+-t "Independent Study "
+-t "Independent Study  "
+-t " Independent Study"
+-t "  Independent Study"
+-t=-c
