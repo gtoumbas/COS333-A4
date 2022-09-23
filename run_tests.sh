@@ -45,7 +45,8 @@ test_with_file (){
         else
             printf 'FAIL %s\n' "${line}"
             printf "Diff:\n"
-            diff correct_output.txt our_output.txt
+            # Max 5 lines of diff
+            diff correct_output.txt our_output.txt | head -n 5
             printf "\n"
         fi
 
