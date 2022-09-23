@@ -25,10 +25,6 @@ def main():
 
     db = RegDB()
     db.search(args)
-
-
-    # db.get_details(8321) # TODO write this into reg details
-
     db.close()
 
 

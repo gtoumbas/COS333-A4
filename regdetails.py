@@ -15,7 +15,6 @@ def main():
 
     db = RegDB()
     db.get_details(args) 
-
     db.close()
 
 

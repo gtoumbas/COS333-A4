@@ -4,11 +4,8 @@ import textwrap
 import sys
 
 # TODO Error handling, Protetction from sql injection 
-# Maybe should be using dicts
 
 class RegDB:
-
-    # Should maybe do something similar when doing searching
 
     DB_URL = 'file:reg.sqlite?mode=ro'
     
@@ -21,7 +18,6 @@ class RegDB:
 
     def close(self):
         self.conn.close()
-
 
     def search(self, args):
         """ 
@@ -42,7 +38,8 @@ class RegDB:
 
         query = self.get_details_query(classID)
         results = self.cur.execute(query).fetchone()
-        self.display_details(results)
+        print(results)
+        # self.display_details(results)
 
 
     # FIXME This seems really messy
@@ -132,7 +129,6 @@ class RegDB:
                         f"Building: {results[4]}\n" + \
                         f"Room: {results[5]}\n\n" + \
                         f"Dept and Number: {results[6]}\n" + \
-                        f"Course Num: {results[7]}\n" + \
                         f"Area: {results[8]}\n" + \
                         f"Title: {results[9]}\n" + \
                         f"Description: {results[10]}\n\n" + \
