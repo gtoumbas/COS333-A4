@@ -3,14 +3,16 @@ import sqlite3
 import textwrap
 import sys
 
-# TODO Error handling, Protetction from sql injection 
+# TODO Error handling, Protetction from sql injection
+
 
 class RegDB:
 
     DB_URL = 'file:reg.sqlite?mode=ro'
-    
+
     def __init__(self):
-        self.conn = sqlite3.connect(self.DB_URL, isolation_level=None, uri=True)
+        self.conn = sqlite3.connect(
+            self.DB_URL, isolation_level=None, uri=True)
         self.cur = self.conn.cursor()
 
         # Throw error if table missing certain columns
@@ -28,21 +30,20 @@ class RegDB:
         results = self.cur.execute(query).fetchall()
         self.display_table(results)
 
-
     def get_details(self, args):
         """ 
         Searches the database and displays the results.
         """
         # TODO Checks on args
-        classID = args.classID 
+        classID = args.classID
 
         query = self.get_details_query(classID)
         results = self.cur.execute(query).fetchone()
         print(results)
         # self.display_details(results)
 
-
     # FIXME This seems really messy
+
     def get_search_query(self, args):
         """ 
         Returns a SQL query based on the arguments. 
@@ -61,7 +62,7 @@ class RegDB:
         INNER JOIN crosslistings ON classes.courseid = crosslistings.courseid
         """
 
-        # Add where clauses 
+        # Add where clauses
         where = "WHERE "
         if dept:
             where += f"dept LIKE '%{dept}%' AND "
@@ -82,18 +83,16 @@ class RegDB:
         # Add where to query
         query += where
 
-
         # Add order by
         query += " ORDER BY dept, coursenum, classid"
 
         return query
 
-
     def get_details_query(self, classid):
         """ 
         Returns a SQL query based on the arguments. 
         """
-        # TODO Error handling 
+        # TODO Error handling
         query = """
         SELECT classes.courseid, days, starttime, endtime, bldg, roomnum, dept, coursenum, area, title, descrip, prereqs, profname 
         FROM classes
@@ -103,14 +102,13 @@ class RegDB:
         INNER JOIN profs ON coursesprofs.profid = profs.profid
         """
 
-        # Add where clauses 
+        # Add where clauses
         where = f"WHERE classid = {classid}"
 
         # Add where to query
         query += where
 
         return query
-
 
     def display_details(self, results):
         NUM_COLUMNS = 13
@@ -137,7 +135,6 @@ class RegDB:
 
         print(detail_output)
 
-
     def display_table(self, results, max_len=72):
         """ 
         Creates a table from the results of sql query.
@@ -156,17 +153,7 @@ class RegDB:
             # Right aligning columns except title. Info from https://docs.python.org/3/library/string.html
             line = f"{classid:>5} {dept:>4} {coursenum:>6} {area:>4} {title}"
             len_without_title = len(line) - len(title)
-            
-            line = "".join(textwrap.wrap(line, max_len, subsequent_indent="\n" + " " * len_without_title))
+
+            line = "".join(textwrap.wrap(line, max_len, subsequent_indent="\n" +
+                           " " * len_without_title, break_long_words=False, fix_sentence_endings=True))
             print(line)
-            
-
-
-
-
-
-
-        
-
-
-        
