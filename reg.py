@@ -20,9 +20,10 @@ def main():
 
     args = parser.parse_args()
 
-    # Need to check for valid args (either here or in regDB)
+    # Need to check for valid args (either here or in regDB) 
+    # Probably best to do it in regDB 
 
-    db = RegDB(DB_NAME)
+    db = RegDB()
     db.search(args)
 
 

@@ -1,6 +1,7 @@
 import argparse
 import sqlite3
 import textwrap
+import sys
 
 # TODO Error handling, Protetction from sql injection 
 # Maybe should be using dicts
@@ -8,24 +9,11 @@ import textwrap
 class RegDB:
 
     # Should maybe do something similar when doing searching
-    DETAILS_COLUMNS = [
-        "Course Id",
-        "Days",
-        "Start Time",
-        "End Time",
-        "Building",
-        "Room",
-        "Department",
-        "Course Number",
-        "Area",
-        "Title",
-        "Description",
-        "Prerequisites",
-        "Professor"
-    ]
+
+    DB_URL = 'file:reg.sqlite?mode=ro'
     
-    def __init__(self, db_path):
-        self.conn = sqlite3.connect(db_path)
+    def __init__(self):
+        self.conn = sqlite3.connect(self.DB_URL, isolation_level=None, uri=True)
         self.cur = self.conn.cursor()
 
         # Throw error if table missing certain columns
@@ -45,20 +33,19 @@ class RegDB:
         self.display_table(results)
 
 
-    def get_details(self, classid):
+    def get_details(self, args):
         """ 
         Searches the database and displays the results.
         """
-        # TODO Error and input handling
+        # TODO Checks on args
+        classID = args.classID 
 
-        query = self.get_details_query(classid)
+        query = self.get_details_query(classID)
         results = self.cur.execute(query).fetchone()
-        result_dict = dict(zip(self.DETAILS_COLUMNS, results))
-        self.display_details(result_dict)
+        self.display_details(results)
 
 
     # FIXME This seems really messy
-    # Should the columns be hardcoded? Or should we pass em in as args? 
     def get_search_query(self, args):
         """ 
         Returns a SQL query based on the arguments. 
@@ -108,7 +95,6 @@ class RegDB:
     def get_details_query(self, classid):
         """ 
         Returns a SQL query based on the arguments. 
-        Could just join all but classes table by courseid
         """
         # TODO Error handling 
         query = """
@@ -128,21 +114,32 @@ class RegDB:
 
         return query
 
-    # Results is a dict here    
-    # This is ugly 
+
     def display_details(self, results):
-        print(f"Course Id: {results['Course Id']}\n")
-        print(f"Days: {results['Days']}")
-        print(f"Start Time: {results['Start Time']}")
-        print(f"End Time: {results['End Time']}")
-        print(f"Building: {results['Building']}")
-        print(f"Room: {results['Room']}\n")
-        print(f"Department and Number: {results['Department']} {results['Course Number']}\n")
-        print(f"Area: {results['Area']}\n")
-        print(f"Title: {results['Title']}\n")
-        print(f"Description: {results['Description']}\n") # TODO Need to wrap
-        print(f"Prerequisites: {results['Prerequisites']}\n")
-        print(f"Professor: {results['Professor']}")
+        NUM_COLUMNS = 13
+
+        # Check length of results. This should never happen, as errors should
+        # be caught be when query executed
+        # FIXME not working with multiple dept
+        if len(results) != NUM_COLUMNS:
+            sys.stderr.write("Error: Invalid number items in details display")
+            sys.exit(1)
+
+        detail_output = f"Course ID: {results[0]}\n\n" + \
+                        f"Days: {results[1]}\n" + \
+                        f"Start Time: {results[2]}\n" + \
+                        f"End Time: {results[3]}\n" + \
+                        f"Building: {results[4]}\n" + \
+                        f"Room: {results[5]}\n\n" + \
+                        f"Dept and Number: {results[6]}\n" + \
+                        f"Course Num: {results[7]}\n" + \
+                        f"Area: {results[8]}\n" + \
+                        f"Title: {results[9]}\n" + \
+                        f"Description: {results[10]}\n\n" + \
+                        f"Prerequisites: {results[11]}\n\n" + \
+                        f"Professor: {results[12]}"
+
+        print(detail_output)
 
 
     def display_table(self, results, maxLen=72):
@@ -166,7 +163,7 @@ class RegDB:
         for r in results:
             classid, dept, coursenum, area, title = r
 
-            # Right aligning columns except title
+            # Right aligning columns except title. Info from https://docs.python.org/3/library/string.html
             line = f"{classid:>5} {dept:>4} {coursenum:>6} {area:>4} {title}"
             len_without_title = len(line) - len(title)
 
