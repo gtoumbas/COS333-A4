@@ -140,9 +140,6 @@ class RegDB:
         Creates a table from the results of sql query.
         """
 
-        # Adjusts for newline
-        # max_len += 1
-        
         header = "ClsId Dept CrsNum Area Title"
         underline = "----- ---- ------ ---- -----"
         print(header)
@@ -155,10 +152,7 @@ class RegDB:
             line = f"{classid:>5} {dept:>4} {coursenum:>6} {area:>4} {title}"
             len_without_title = len(line) - len(title)
 
+            line = textwrap.fill(line, max_len, subsequent_indent=" " *
+                                 len_without_title, break_long_words=False)
 
-
-
-            line = "".join(textwrap.wrap(line, max_len, subsequent_indent="\n" +
-                           " " * len_without_title, break_long_words=False))
-                           
             print(line)
