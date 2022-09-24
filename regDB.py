@@ -126,7 +126,7 @@ class RegDB:
         dept_num = ""
         profs = []
         for r in results:
-            new_dept_num = f"{r[5]} {r[6]}"
+            new_dept_num = f"{r[6]} {r[7]}"
             if new_dept_num not in dept_num:
                 dept_num += f"Dept and Number: {new_dept_num}\n"
 
