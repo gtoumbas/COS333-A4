@@ -25,22 +25,30 @@ class RegDB:
         """ 
         Searches the database and displays the results.
         """
-
+        self.format_args(args)
         query = self.get_search_query(args)
         results = self.cur.execute(query).fetchall()
+
         self.display_table(results)
 
     def get_details(self, args):
         """ 
         Searches the database and displays the results.
         """
-        # TODO Checks on args
         classID = args.classID
+
+        if not classID.isdigit():
+            sys.stderr.write("Error: Class ID must be a number")
+            sys.exit(1)
 
         query = self.get_details_query(classID)
         results = self.cur.execute(query).fetchall()
-        self.display_details(results)
 
+        if len(results) == 0:
+            sys.stderr.write(f"no class with classid {classID} exists")
+            sys.exit(1)
+
+        self.display_details(results)
 
 
     def get_search_query(self, args):
@@ -64,13 +72,13 @@ class RegDB:
         # Add where clauses
         where = "WHERE "
         if dept:
-            where += f"dept LIKE '%{dept}%' AND "
+            where += f"lower(dept) LIKE '%{dept}%' escape '@' AND "
         if num:
-            where += f"coursenum LIKE '%{num}%' AND "
+            where += f"coursenum LIKE '%{num}%' escape '@' AND "
         if area:
-            where += f"area LIKE '%{area}%' AND "
+            where += f"lower(area) LIKE '%{area}%' escape '@' AND "
         if title:
-            where += f"title LIKE '%{title}%' AND "
+            where += f"lower(title) LIKE '%{title}%' escape '@' AND "
 
         # Remove last AND
         if where != "WHERE ":
@@ -86,6 +94,7 @@ class RegDB:
         query += " ORDER BY dept, coursenum, classid"
 
         return query
+
 
     def get_details_query(self, classid):
         """ 
@@ -110,6 +119,7 @@ class RegDB:
         # Add order by
         query += " ORDER BY dept, coursenum"
         return query
+
 
     def display_details(self, results):
         NUM_COLUMNS = 13
@@ -159,6 +169,7 @@ class RegDB:
         if profs[0] != None:
             print(f"{prof_str}")
 
+
     def display_table(self, results, max_len=72):
         """ 
         Creates a table from the results of sql query.
@@ -180,3 +191,26 @@ class RegDB:
                                  len_without_title, break_long_words=False)
 
             print(line)
+
+
+    def replace_wildcards(self, string):
+        """ 
+        Replaces wildcard chars with escape chars + wildcard char.
+        """
+        string = string.replace("%", "@%")
+        string = string.replace("_", "@_")
+        return string
+
+
+    def format_args(self, args):
+        """
+        Removes wildcards, converts to lowercase, and removes newline chars
+        """
+
+        for key, value in vars(args).items():
+            if value:
+                value = self.replace_wildcards(value)
+                value = value.lower()
+                value = value.replace("\n", "")
+                args.__setattr__(key, value)
+
