@@ -142,6 +142,7 @@ class RegDB:
         
         wrapped_descrip = textwrap.fill(f"Description: {res[10]}", 72, break_long_words=False)
         wrapped_title = textwrap.fill(f"Title: {res[9]}", 72, break_long_words=False)
+        wrapped_prereqs = textwrap.fill(f"Prerequisites: {res[11]}", 72, break_long_words=False)
 
         print(f"Course Id: {res[0]}\n")
         print(f"Days: {res[1]}")
@@ -154,7 +155,7 @@ class RegDB:
         print(f"{wrapped_title}\n")
         print(f"{wrapped_descrip}\n")
         if len(res[11]) > 0:
-            print(f"Prerequisites: {res[11]}\n")
+            print(f"{wrapped_prereqs}\n")
         else:
             print(f"Prerequisites:\n")
         if profs[0] != None:
