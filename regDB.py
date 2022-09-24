@@ -37,7 +37,7 @@ class RegDB:
         """
         classID = args.classID
 
-        if not classID.isdigit():
+        if not str(classID).isdigit():
             sys.stderr.write("Error: Class ID must be a number")
             sys.exit(1)
 
