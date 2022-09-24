@@ -20,6 +20,7 @@ test_with_file (){
 
     while read line
     do
+        # Adjust for quotes in line
 
         python $correct_file $line > correct_output.txt 2> correct_error.txt
         python $our_file $line > our_output.txt 2> our_error.txt
