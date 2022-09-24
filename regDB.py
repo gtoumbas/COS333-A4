@@ -139,7 +139,6 @@ class RegDB:
             prof_str += f"Professor: {p}\n"
         # Remove last newline
         prof_str = prof_str[:-1]
-
         
         wrapped_descrip = textwrap.fill(f"Description: {res[10]}", 72, break_long_words=False)
         wrapped_title = textwrap.fill(f"Title: {res[9]}", 72, break_long_words=False)
@@ -154,7 +153,10 @@ class RegDB:
         print(f"Area: {res[8]}\n")
         print(f"{wrapped_title}\n")
         print(f"{wrapped_descrip}\n")
-        print(f"Prerequisites: {res[11]}\n")
+        if len(res[11]) > 0:
+            print(f"Prerequisites: {res[11]}\n")
+        else:
+            print(f"Prerequisites:\n")
         if profs[0] != None:
             print(f"{prof_str}")
 
