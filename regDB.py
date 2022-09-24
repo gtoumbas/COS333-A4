@@ -112,7 +112,6 @@ class RegDB:
         return query
 
     def display_details(self, results):
-        # TODO need to handle multiple profs
         NUM_COLUMNS = 13
         res = results[0]
 
@@ -129,7 +128,6 @@ class RegDB:
             new_dept_num = f"{r[6]} {r[7]}"
             if new_dept_num not in dept_num:
                 dept_num += f"Dept and Number: {new_dept_num}\n"
-
             profs.append(r[12])
         
         profs = list(set(profs))
@@ -142,7 +140,7 @@ class RegDB:
         
         wrapped_descrip = textwrap.fill(f"Description: {res[10]}", 72, break_long_words=False)
         wrapped_title = textwrap.fill(f"Title: {res[9]}", 72, break_long_words=False)
-        wrapped_prereqs = textwrap.fill(f"Prerequisites: {res[11]}", 72, break_long_words=False)
+        wrapped_prereqs = textwrap.fill(f"Prerequisites: {res[11]}", 72, break_long_words=True)
 
         print(f"Course Id: {res[0]}\n")
         print(f"Days: {res[1]}")
