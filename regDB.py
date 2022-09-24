@@ -97,8 +97,8 @@ class RegDB:
         FROM classes
         INNER JOIN courses ON classes.courseid = courses.courseid
         INNER JOIN crosslistings ON classes.courseid = crosslistings.courseid
-        INNER JOIN coursesprofs ON classes.courseid = coursesprofs.courseid
-        INNER JOIN profs ON coursesprofs.profid = profs.profid
+        LEFT JOIN coursesprofs ON classes.courseid = coursesprofs.courseid
+        LEFT JOIN profs ON coursesprofs.profid = profs.profid
         """
 
         # Add where clauses
@@ -112,6 +112,7 @@ class RegDB:
         return query
 
     def display_details(self, results):
+        # TODO need to handle multiple profs
         NUM_COLUMNS = 13
         res = results[0]
 
@@ -121,10 +122,25 @@ class RegDB:
             sys.stderr.write("Error: Invalid number items in details display")
             sys.exit(1)
 
-        # multiple depts
+        # multiple depts and profs
         dept_num = ""
+        profs = []
         for r in results:
-            dept_num += f"Dept and Number: {r[6]} {r[7]}\n"
+            new_dept_num = f"{r[5]} {r[6]}"
+            if new_dept_num not in dept_num:
+                dept_num += f"Dept and Number: {new_dept_num}\n"
+
+            profs.append(r[12])
+        
+        profs = list(set(profs))
+        print(profs)
+        profs.sort()
+        prof_str = ""
+        for p in profs:
+            prof_str += f"Professor: {p}\n"
+        # Remove last newline
+        prof_str = prof_str[:-1]
+
         
         wrapped_descrip = textwrap.fill(f"Description: {res[10]}", 72, break_long_words=False)
         wrapped_title = textwrap.fill(f"Title: {res[9]}", 72, break_long_words=False)
@@ -135,12 +151,13 @@ class RegDB:
         print(f"End time: {res[3]}")
         print(f"Building: {res[4]}")
         print(f"Room: {res[5]}\n")
-        print(dept_num + "\n")
+        print(dept_num)
         print(f"Area: {res[8]}\n")
         print(f"{wrapped_title}\n")
         print(f"{wrapped_descrip}\n")
         print(f"Prerequisites: {res[11]}\n")
-        print(f"Professor: {res[12]}")
+        if profs[0] != None:
+            print(f"{prof_str}")
 
     def display_table(self, results, max_len=72):
         """ 
