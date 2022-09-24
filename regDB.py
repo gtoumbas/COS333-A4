@@ -133,7 +133,6 @@ class RegDB:
             profs.append(r[12])
         
         profs = list(set(profs))
-        print(profs)
         profs.sort()
         prof_str = ""
         for p in profs:
