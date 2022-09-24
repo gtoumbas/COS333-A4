@@ -38,10 +38,10 @@ class RegDB:
         classID = args.classID
 
         query = self.get_details_query(classID)
-        results = self.cur.execute(query).fetchone()
+        results = self.cur.execute(query).fetchall()
         self.display_details(results)
 
-    # FIXME This seems really messy
+
 
     def get_search_query(self, args):
         """ 
@@ -111,29 +111,34 @@ class RegDB:
 
     def display_details(self, results):
         NUM_COLUMNS = 13
+        res = results[0]
 
         # Check length of results. This should never happen, as errors should
         # be caught be when query executed
-        # FIXME not working with multiple dept
-        if len(results) != NUM_COLUMNS:
+        if len(res) != NUM_COLUMNS:
             sys.stderr.write("Error: Invalid number items in details display")
             sys.exit(1)
-        
-        wrapped_descrip = textwrap.fill(f"Description: {results[10]}", 72, break_long_words=False)
-        wrapped_title = textwrap.fill(f"Title: {results[9]}", 72, break_long_words=False)
 
-        print(f"Course Id: {results[0]}\n")
-        print(f"Days: {results[1]}")
-        print(f"Start time: {results[2]}")
-        print(f"End time: {results[3]}")
-        print(f"Building: {results[4]}")
-        print(f"Room: {results[5]}\n")
-        print(f"Dept and Number: {results[6]} {results[7]}\n")
-        print(f"Area: {results[8]}\n")
+        # multiple depts
+        dept_num = ""
+        for r in results:
+            dept_num += f"Dept and Number: {r[6]} {r[7]}\n"
+        
+        wrapped_descrip = textwrap.fill(f"Description: {res[10]}", 72, break_long_words=False)
+        wrapped_title = textwrap.fill(f"Title: {res[9]}", 72, break_long_words=False)
+
+        print(f"Course Id: {res[0]}\n")
+        print(f"Days: {res[1]}")
+        print(f"Start time: {res[2]}")
+        print(f"End time: {res[3]}")
+        print(f"Building: {res[4]}")
+        print(f"Room: {res[5]}\n")
+        print(dept_num + "\n")
+        print(f"Area: {res[8]}\n")
         print(f"{wrapped_title}\n")
         print(f"{wrapped_descrip}\n")
-        print(f"Prerequisites: {results[11]}\n")
-        print(f"Professor: {results[12]}")
+        print(f"Prerequisites: {res[11]}\n")
+        print(f"Professor: {res[12]}")
 
     def display_table(self, results, max_len=72):
         """ 
