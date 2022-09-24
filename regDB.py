@@ -107,6 +107,8 @@ class RegDB:
         # Add where to query
         query += where
 
+        # Add order by
+        query += " ORDER BY dept, coursenum"
         return query
 
     def display_details(self, results):
