@@ -59,8 +59,8 @@ test_with_file (){
     done < $arg_file
 }
 
-test_with_file "reg_test_args.txt" $CORRECT_REG $OUR_REG
-# test_with_file "regdetails_test_args.txt" $CORRECT_REGDETAILS $OUR_REGDETAILS
+# test_with_file "reg_test_args.txt" $CORRECT_REG $OUR_REG
+test_with_file "regdetails_test_args.txt" $CORRECT_REGDETAILS $OUR_REGDETAILS
 
 # Clean up
 trap "rm -f correct_output.txt our_output.txt correct_error.txt our_error.txt" EXIT

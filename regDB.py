@@ -124,16 +124,16 @@ class RegDB:
 
         print(f"Course Id: {results[0]}\n")
         print(f"Days: {results[1]}")
-        print(f"Start Time: {results[2]}")
-        print(f"End Time: {results[3]}")
+        print(f"Start time: {results[2]}")
+        print(f"End time: {results[3]}")
         print(f"Building: {results[4]}")
-        print(f"Room Number: {results[5]}\n")
+        print(f"Room: {results[5]}\n")
         print(f"Dept and Number: {results[6]} {results[7]}\n")
         print(f"Area: {results[8]}\n")
         print(f"{wrapped_title}\n")
         print(f"{wrapped_descrip}\n")
         print(f"Prerequisites: {results[11]}\n")
-        print(f"Professor: {results[12]}\n")
+        print(f"Professor: {results[12]}")
 
     def display_table(self, results, max_len=72):
         """ 
