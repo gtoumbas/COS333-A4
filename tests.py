@@ -49,7 +49,11 @@ def test_with_file(arg_file, correct_file, our_file):
         except subprocess.CalledProcessError as e:
             our_output = e.output.decode()
 
-        # Compare outputs
+        # Replace filenames in output if exists 
+        # Get py or pyc file name
+        correct_file_name = correct_file.split("/")[-1]
+        correct_output = correct_output.replace(correct_file_name, our_file)
+        
         if correct_output != our_output:
             print(f"Failed with {a}")
             # Display max 5 lines where outputs differ
