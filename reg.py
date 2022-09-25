@@ -4,9 +4,6 @@ Authors: George Toumbas, Shanzay Waseem
 import argparse
 from reg_db import RegDB
 
-DB_NAME = 'reg.sqlite'
-
-
 def main():
     """
     Reads arguments from the command line and searches the registrar database.
