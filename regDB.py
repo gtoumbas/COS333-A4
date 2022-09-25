@@ -61,8 +61,10 @@ class RegDB:
             sys.stderr.write("Error: Class ID must be a number")
             sys.exit(1)
 
-        query = self.get_details_query(classID)
-        results = self.cur.execute(query).fetchall()
+        query = self.get_details_query()
+        parameters = [classID]
+        self.format_args(parameters)
+        results = self.cur.execute(query, parameters).fetchall()
 
         if len(results) == 0:
             sys.stderr.write(f"no class with classid {classID} exists")
@@ -116,7 +118,7 @@ class RegDB:
         return query
 
 
-    def get_details_query(self, classid):
+    def get_details_query(self):
         """ 
         Returns a SQL query based on the arguments. 
         """
@@ -131,7 +133,7 @@ class RegDB:
         """
 
         # Add where clauses
-        where = f"WHERE classid = {classid}"
+        where = f"WHERE classid = ?"
 
         # Add where to query
         query += where
