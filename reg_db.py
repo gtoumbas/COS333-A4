@@ -84,7 +84,7 @@ class RegDB:
 
     def get_details(self, args):
         """
-        Searches the database for a single class and 
+        Searches the database for a single class and
         displays the results.
 
         Args:

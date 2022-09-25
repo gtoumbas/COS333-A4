@@ -7,7 +7,8 @@ from reg_db import RegDB
 
 def main():
     """
-    Reads arguments (classid) from the command line and searches the registrar database.
+    Reads arguments (classid) from the command
+    line and searches the registrar database.
     """
     # Information from https://docs.python.org/3/howto/argparse.html
 
