@@ -73,5 +73,5 @@ def test_with_file(arg_file, correct_file, our_file):
     print(f"Failed {num_failed} tests")
         
 
-test_with_file('reg_test_args.txt', CORRECT_REG, OUR_REG)
-test_with_file('regdetails_test_args.txt', CORRECT_REGDETAILS, OUR_REGDETAILS)
+test_with_file('reg_test_args.txt', OUR_REG, OUR_REG)
+# test_with_file('regdetails_test_args.txt', OUR_REGDETAILS, OUR_REGDETAILS)

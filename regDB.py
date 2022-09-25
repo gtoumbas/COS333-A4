@@ -47,6 +47,7 @@ class RegDB:
         except Exception as err:
            sys.stderr.write("Query was unsuccessful")
            sys.exit(1)
+
         self.display_table(results)
 
     
@@ -230,6 +231,6 @@ class RegDB:
                 value = self.replace_wildcards(value)
                 value = value.lower()
                 value = value.replace("\n", "")
-                args.__setattr__(key, value)
                 value = "%{}%".format(value)
+                args.__setattr__(key, value)
 
