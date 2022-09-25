@@ -1,9 +1,37 @@
+"""
+Authors: George Toumbas, Shanzay Waseem
+
+Contains the class RegDB, which can search and
+display information from the registrar database.
+"""
 import sqlite3
 import textwrap
 import sys
 
 
 class RegDB:
+    """
+    Represents registrar database.
+
+    Attributes:
+        DB_URL (str): Path to database
+
+    Methods:
+        search(args):
+            Searches the database and displays the results.
+        get_details(args):
+            Searches the database for single class and displays the results.
+        get_search_query(args):
+            Returns a SQL query for a search based on the arguments.
+        get_details_query():
+            Returns a SQL query for classid-based search.
+        display_table(results, max_len=72):
+            Creates a table from the results of sql search query.
+        replace_wildcards(string):
+            Replaces wildcard chars with escape chars + wildcard char.
+        format_args(args):
+            Formats the arguments for the search query.
+    """
 
     DB_URL = 'file:reg.sqlite?mode=ro'
 
@@ -19,11 +47,17 @@ class RegDB:
             sys.exit(1)
 
     def close(self):
+        """
+        Closes the connection to the database.
+        """
         self.conn.close()
 
     def search(self, args):
         """
         Searches the database and displays the results.
+
+        Args:
+            args (argparse.Namespace): Arguments from command line
         """
         self.format_args(args)
         query = self.get_search_query(args)
@@ -48,7 +82,10 @@ class RegDB:
 
     def get_details(self, args):
         """
-        Searches the database and displays the results.
+        Searches the database for a single class and displays the results.
+
+        Args:
+            args (argparse.Namespace): Arguments from command line
         """
         class_id = args.classID
 
@@ -69,8 +106,13 @@ class RegDB:
 
     def get_search_query(self, args):
         """
-        Returns a SQL query based on the arguments.
-        Could just join all but classes table by courseid
+        Returns a SQL query for search based on the arguments.
+
+        Args:
+            args (argparse.Namespace): Arguments from command line
+
+        Returns:
+            query (str): SQL query
         """
         dept = args.d
         num = args.n
@@ -111,10 +153,13 @@ class RegDB:
 
     def get_details_query(self):
         """
-        Returns a SQL query based on the arguments.
+        Returns a SQL query for classid-based search.
+
+        Returns:
+            query (str): SQL query
         """
         query = """
-        SELECT classes.courseid, days, starttime, endtime, bldg, roomnum, dept, coursenum, area, title, descrip, prereqs, profname 
+        SELECT classes.courseid, days, starttime, endtime, bldg, roomnum, dept, coursenum, area, title, descrip, prereqs, profname
         FROM classes
         INNER JOIN courses ON classes.courseid = courses.courseid
         INNER JOIN crosslistings ON classes.courseid = crosslistings.courseid
@@ -133,6 +178,12 @@ class RegDB:
         return query
 
     def display_details(self, results):
+        """
+        Displays the results of a classid-based search.
+
+        Args:
+            results (list): Results of the search query
+        """
         num_columns = 13
         res = results[0]
 
@@ -187,7 +238,11 @@ class RegDB:
 
     def display_table(self, results, max_len=72):
         """
-        Creates a table from the results of sql query.
+        Creates and prints a table of results from a search query.
+
+        Args:
+            results (list): Results of the search query
+            max_len (int): Maximum length of a line
         """
 
         header = "ClsId Dept CrsNum Area Title"
@@ -213,6 +268,12 @@ class RegDB:
     def replace_wildcards(self, string):
         """
         Replaces wildcard chars with escape chars + wildcard char.
+
+        Args:
+            string (str): String to replace wildcards in
+
+        Returns:
+            string (str): String with wildcards replaced
         """
         string = string.replace("%", "@%")
         string = string.replace("_", "@_")
@@ -222,11 +283,14 @@ class RegDB:
         """
         Removes wildcards, converts to lowercase,
         and removes newline chars
+
+        Args:
+            args (list): List of arguments to format
         """
         for key, value in vars(args).items():
             if value:
                 value = self.replace_wildcards(value)
                 value = value.lower()
                 value = value.replace("\n", "")
-                value = "%{}%".format(value)
-                args.__setattr__(key, value)
+                value = f"%{value}%"
+                setattr(args, key, value)
