@@ -52,7 +52,8 @@ def test_with_file(arg_file, correct_file, our_file):
         # Replace filenames in output if exists 
         # Get py or pyc file name
         correct_file_name = correct_file.split("/")[-1]
-        correct_output = correct_output.replace(correct_file_name, our_file)
+        correct_output = correct_output.replace(correct_file_name, "")
+        our_output = our_output.replace(our_file, "")
         
         if correct_output != our_output:
             print(f"Failed with {a}")
@@ -77,5 +78,5 @@ def test_with_file(arg_file, correct_file, our_file):
     print(f"Failed {num_failed} tests")
         
 
-test_with_file('reg_test_args.txt', OUR_REG, OUR_REG)
+test_with_file('reg_test_args.txt', CORRECT_REG, OUR_REG)
 # test_with_file('regdetails_test_args.txt', OUR_REGDETAILS, OUR_REGDETAILS)

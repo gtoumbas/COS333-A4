@@ -200,8 +200,8 @@ class RegDB:
 
             # Right aligning columns except title.
             # Info from https://docs.python.org/3/library/string.html
-            line = f"{classid:>5} {dept:>4} {coursenum:>6} \
-                {area:>4} {title}"
+            line = f"{classid:>5} {dept:>4} {coursenum:>6} " + \
+                f"{area:>4} {title}"
             len_without_title = len(line) - len(title)
 
             line = textwrap.fill(
