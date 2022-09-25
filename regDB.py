@@ -63,7 +63,6 @@ class RegDB:
 
         query = self.get_details_query()
         parameters = [classID]
-        self.format_args(parameters)
         results = self.cur.execute(query, parameters).fetchall()
 
         if len(results) == 0:
