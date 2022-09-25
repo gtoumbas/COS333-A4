@@ -15,3 +15,11 @@
 -t " Independent Study"
 -t "  Independent Study"
 -t=-c
+a qr
+-A qr
+"-a " qr
+-a qr st
+-a
+-a qr -d
+-a -d cos
+-x
