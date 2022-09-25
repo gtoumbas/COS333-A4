@@ -42,9 +42,9 @@ class RegDB:
             self.conn = sqlite3.connect(
                 self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
-        # Error if database path is wrong
-        except sqlite3.Error:
-            sys.stderr.write("Error: Database path is wrong")
+
+        except Exception as e:
+            sys.stderr.write(f"{sys.argv[0]}: {e}")
             sys.exit(1)
 
     def close(self):
@@ -76,8 +76,8 @@ class RegDB:
             results = self.cur.execute(query, parameters).fetchall()
 
         # Error if the query is unsuccessful
-        except sqlite3.Error:
-            sys.stderr.write("Query was unsuccessful")
+        except Exception as e:
+            sys.stderr.write(f"{sys.argv[0]}: {e}")
             sys.exit(1)
 
         self.display_table(results)
