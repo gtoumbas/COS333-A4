@@ -1,25 +1,31 @@
 import argparse
+from inspect import ArgSpec
 import sqlite3
 import textwrap
 import sys
+import re
 
 # TODO Error handling, Protetction from sql injection
-
 
 class RegDB:
 
     DB_URL = 'file:reg.sqlite?mode=ro'
 
     def __init__(self):
-        self.conn = sqlite3.connect(
-            self.DB_URL, isolation_level=None, uri=True)
-        self.cur = self.conn.cursor()
 
-        # Throw error if table missing certain columns
+        try:
+            self.conn = sqlite3.connect(
+                self.DB_URL, isolation_level=None, uri=True)
+            self.cur = self.conn.cursor()
         # Error if db path is wrong
-
+        except Exception as err:
+            sys.stderr.write("Error: Database path is wrong")
+            sys.exit(1)
+            
+       
     def close(self):
         self.conn.close()
+
 
     def search(self, args):
         """ 
@@ -27,10 +33,14 @@ class RegDB:
         """
         self.format_args(args)
         query = self.get_search_query(args)
-        results = self.cur.execute(query).fetchall()
-
+        try:
+            results = self.cur.execute(query).fetchall()
+        except Exception as err:
+           sys.stderr.write("Query was unsuccessful")
+           sys.exit(1)
         self.display_table(results)
 
+    
     def get_details(self, args):
         """ 
         Searches the database and displays the results.
@@ -206,11 +216,11 @@ class RegDB:
         """
         Removes wildcards, converts to lowercase, and removes newline chars
         """
-
         for key, value in vars(args).items():
             if value:
                 value = self.replace_wildcards(value)
                 value = value.lower()
                 value = value.replace("\n", "")
                 args.__setattr__(key, value)
+                value = "%{}%".format(value)
 
