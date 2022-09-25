@@ -33,8 +33,17 @@ class RegDB:
         """
         self.format_args(args)
         query = self.get_search_query(args)
+        parameters = []
+        if args.d:
+            parameters.append(args.d)
+        if args.n:
+            parameters.append(args.n)
+        if args.a:
+            parameters.append(args.a)
+        if args.t:
+            parameters.append(args.t)
         try:
-            results = self.cur.execute(query).fetchall()
+            results = self.cur.execute(query, parameters).fetchall()
         except Exception as err:
            sys.stderr.write("Query was unsuccessful")
            sys.exit(1)
@@ -82,13 +91,13 @@ class RegDB:
         # Add where clauses
         where = "WHERE "
         if dept:
-            where += f"lower(dept) LIKE '%{dept}%' escape '@' AND "
+            where += "dept LIKE ? escape '@' AND "
         if num:
-            where += f"coursenum LIKE '%{num}%' escape '@' AND "
+            where += "coursenum LIKE ? escape '@' AND "
         if area:
-            where += f"lower(area) LIKE '%{area}%' escape '@' AND "
+            where += "area LIKE ? escape '@' AND "
         if title:
-            where += f"lower(title) LIKE '%{title}%' escape '@' AND "
+            where += "title LIKE ? escape '@' AND "
 
         # Remove last AND
         if where != "WHERE ":
