@@ -20,7 +20,8 @@ class RegDB:
         search(args):
             Searches the database and displays the results.
         get_details(args):
-            Searches the database for single class and displays the results.
+            Searches the database for single class and displays
+            the results.
         get_search_query(args):
             Returns a SQL query for a search based on the arguments.
         get_details_query():
@@ -83,7 +84,8 @@ class RegDB:
 
     def get_details(self, args):
         """
-        Searches the database for a single class and displays the results.
+        Searches the database for a single class and 
+        displays the results.
 
         Args:
             args (argparse.Namespace): Arguments from command line

@@ -4,16 +4,17 @@ Authors: George Toumbas, Shanzay Waseem
 import argparse
 from reg_db import RegDB
 
+
 def main():
     """
-    Reads arguments from the command line and searches the registrar database.
+    Reads arguments from the command line and 
+    searches the registrar database.
     """
     # Information from https://docs.python.org/3/howto/argparse.html
 
     parser = argparse.ArgumentParser(
         allow_abbrev=False,
-        description =
-        "Registrar application: show overviews of classes")
+        description="Registrar application: show overviews of classes")
     parser.add_argument(
         '-d', metavar='dept',
         help="Show only those classes whose department contains dept",
@@ -28,8 +29,7 @@ def main():
         type=str)
     parser.add_argument(
         '-t', metavar='title',
-        help=
-        "Show only those classes whose course title contains title",
+        help="Show only those classes whose course title contains title",
         type=str)
 
     args = parser.parse_args()
