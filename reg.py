@@ -15,7 +15,7 @@ def main():
         description =
         "Registrar application: show overviews of classes")
     parser.add_argument(
-        '-d', metavar='dest',
+        '-d', metavar='dept',
         help="Show only those classes whose department contains dept",
         type=str)
     parser.add_argument(
