@@ -17,19 +17,19 @@ def main():
         description="Registrar application: show overviews of classes")
     parser.add_argument(
         '-d', metavar='dept',
-        help="Show only those classes whose department contains dept",
+        help="show only those classes whose department contains dept",
         type=str)
     parser.add_argument(
         '-n', metavar='num',
-        help="Show only those classes whose course number contains num",
+        help="show only those classes whose course number contains num",
         type=str)
     parser.add_argument(
         '-a', metavar='area',
-        help="Show only those classes whose distrib area contains area",
+        help="show only those classes whose distrib area contains area",
         type=str)
     parser.add_argument(
         '-t', metavar='title',
-        help="Show only those classes" +\
+        help="show only those classes" +\
             " whose course title contains title",
         type=str)
 
