@@ -43,8 +43,8 @@ class RegDB:
                 self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
 
-        except Exception as e:
-            sys.stderr.write(f"{sys.argv[0]}: {e}")
+        except Exception as error:
+            sys.stderr.write(f"{sys.argv[0]}: {error}")
             sys.exit(1)
 
     def close(self):
@@ -76,8 +76,8 @@ class RegDB:
             results = self.cur.execute(query, parameters).fetchall()
 
         # Error if the query is unsuccessful
-        except Exception as e:
-            sys.stderr.write(f"{sys.argv[0]}: {e}")
+        except Exception as error:
+            sys.stderr.write(f"{sys.argv[0]}: {error}")
             sys.exit(1)
 
         self.display_table(results)
