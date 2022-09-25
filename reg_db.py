@@ -43,7 +43,7 @@ class RegDB:
                 self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
         # Error if database path is wrong
-        except sqlite3.OperationalError:
+        except sqlite3.Error:
             sys.stderr.write("Error: Database path is wrong")
             sys.exit(1)
 
