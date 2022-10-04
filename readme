@@ -1,1 +1,35 @@
 gtoumbas_swaseem
+
+Contributions:
+
+George: 
+
+After Shanzay and I decided on how we wanted to structure our code, 
+I wrote a substantial portion of the intial version of reg_db.py. I wrote
+working versions of the get_search_query, get_details_query, and display_table 
+methods. I also wrote a python script which reads arguments from a txt file
+and compares the outputs of our program on those arguments with the outputs
+of the reference .pyc files. Using this program, I tested regdetails.py on every
+entry classid in the database and tested reg.py against all example args on the
+assignment page + some additional args.  
+
+
+Shanzay: 
+
+Shanzay was responsible for writing the regdetails.py and reg.py files. She 
+also wrote the replace_wildcards and format_args methods in reg_db.py. She 
+implemented the exception handling in reg_db.py and she revised the code 
+in reg_db.py to protect against SQL injections. She also wrote a majority of 
+the doctstrings and handled pylint checking.
+
+Outside Help:
+Just python online documentation.
+
+Time Spent: ~15 hours
+
+Assesment of Assignment:
+
+I enjoyed it! I had never interacted with a SQL db from python. I also feel 
+that I learned a lot from writing automated testing. It was a lot more work 
+than I initially anticipated. Also, it is worth noting that Shanzay was quite 
+sick for over a week with covid during this assigment.

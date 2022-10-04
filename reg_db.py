@@ -17,6 +17,8 @@ class RegDB:
         DB_URL (str): Path to database
 
     Methods:
+        close():
+            Closes connection to the db.
         search(args):
             Searches the database and displays the results.
         get_details(args):
