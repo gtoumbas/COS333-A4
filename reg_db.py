@@ -19,12 +19,12 @@ class RegDB:
     Methods:
         close():
             Closes connection to the db.
-        search(args):
+        search(inputs):
             Searches the database and displays the results.
-        get_details(args):
+        get_details(inputs):
             Searches the database for single class and displays
             the results.
-        get_search_query(args):
+        get_search_query(inputs):
             Returns a SQL query for a search based on the arguments.
         get_details_query():
             Returns a SQL query for classid-based search.
@@ -32,7 +32,7 @@ class RegDB:
             Creates a table from the results of sql search query.
         replace_wildcards(string):
             Replaces wildcard chars with escape chars + wildcard char.
-        format_args(args):
+        format_inputs(inputs):
             Formats the arguments for the search query.
     """
 
@@ -55,25 +55,25 @@ class RegDB:
         """
         self.conn.close()
 
-    def search(self, args):
+    def search(self, inputs):
         """
         Searches the database and displays the results.
 
-        Args:
-            args (argparse.Namespace): Arguments from command line
+        Inputs:
+            Inputs from textbox entries 
         """
-        self.format_args(args)
-        query = self.get_search_query(args)
+        self.format_inputs(inputs)
+        query = self.get_search_query(inputs)
         # Parameters set to fill in prepared statements
         parameters = []
-        if args.d:
-            parameters.append(args.d)
-        if args.n:
-            parameters.append(args.n)
-        if args.a:
-            parameters.append(args.a)
-        if args.t:
-            parameters.append(args.t)
+        if inputs[0]:
+            parameters.append(inputs[0])
+        if inputs[1]:
+            parameters.append(inputs[1])
+        if inputs[2]:
+            parameters.append(inputs[2])
+        if inputs[3]:
+            parameters.append(inputs[3])
         try:
             results = self.cur.execute(query, parameters).fetchall()
 
@@ -84,6 +84,7 @@ class RegDB:
 
         self.display_table(results)
 
+    # TODO: how to get classID?
     def get_details(self, args):
         """
         Searches the database for a single class and
@@ -109,20 +110,21 @@ class RegDB:
 
         self.display_details(results)
 
-    def get_search_query(self, args):
+
+    def get_search_query(self, inputs):
         """
         Returns a SQL query for search based on the arguments.
 
-        Args:
-            args (argparse.Namespace): Arguments from command line
+        Inputs:
+            Inputs from text box entry
 
         Returns:
             query (str): SQL query
         """
-        dept = args.d
-        num = args.n
-        area = args.a
-        title = args.t
+        dept = inputs[0]
+        num = inputs[1]
+        area = inputs[2]
+        title = inputs[3]
 
         query = """
         SELECT classid, dept, coursenum, area, title
@@ -186,7 +188,7 @@ class RegDB:
         """
         Displays the results of a classid-based search.
 
-        Args:
+        Inputs:
             results (list): Results of the search query
         """
         num_columns = 13
@@ -245,7 +247,7 @@ class RegDB:
         """
         Creates and prints a table of results from a search query.
 
-        Args:
+        Inputs:
             results (list): Results of the search query
             max_len (int): Maximum length of a line
         """
@@ -274,7 +276,7 @@ class RegDB:
         """
         Replaces wildcard chars with escape chars + wildcard char.
 
-        Args:
+        Inputs:
             string (str): String to replace wildcards in
 
         Returns:
@@ -284,18 +286,18 @@ class RegDB:
         string = string.replace("_", "@_")
         return string
 
-    def format_args(self, args):
+    def format_inputs(self, inputs):
         """
         Removes wildcards, converts to lowercase,
         and removes newline chars
 
-        Args:
-            args (list): List of arguments to format
+        Inputs:
+            inputs: List of entries to format
         """
-        for key, value in vars(args).items():
+        for key, value in vars(inputs).items():
             if value:
                 value = self.replace_wildcards(value)
                 value = value.lower()
                 value = value.replace("\n", "")
                 value = f"%{value}%"
-                setattr(args, key, value)
+                setattr(inputs, key, value)

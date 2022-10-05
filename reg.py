@@ -69,6 +69,12 @@ def main():
 
         frame.setLayout(layout)
         window.show()
+
+        inputs = [deptLine, numberLine, areaLine, titleLine] 
+        registrar_db = RegDB()
+        registrar_db.search(inputs)
+        registrar_db.close()
+
         sys.exit(app.exec_())
 
 
@@ -79,6 +85,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-    #registrar_db = RegDB()
-    #registrar_db.search(args)
-    #registrar_db.close()
+    
