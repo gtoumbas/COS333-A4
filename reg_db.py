@@ -65,24 +65,16 @@ class RegDB:
         self.format_inputs(inputs)
         query = self.get_search_query(inputs)
         # Parameters set to fill in prepared statements
-        parameters = []
-        if inputs[0]:
-            parameters.append(inputs[0])
-        if inputs[1]:
-            parameters.append(inputs[1])
-        if inputs[2]:
-            parameters.append(inputs[2])
-        if inputs[3]:
-            parameters.append(inputs[3])
+        parameters = [x for x in inputs if x]
         try:
             results = self.cur.execute(query, parameters).fetchall()
-
         # Error if the query is unsuccessful
         except Exception as error:
             sys.stderr.write(f"{sys.argv[0]}: {error}")
             sys.exit(1)
+        return results
 
-        self.display_table(results)
+        # self.display_table(results)
 
     # TODO: how to get classID?
     def get_details(self, args):
@@ -294,10 +286,13 @@ class RegDB:
         Inputs:
             inputs: List of entries to format
         """
-        for key, value in vars(inputs).items():
-            if value:
-                value = self.replace_wildcards(value)
-                value = value.lower()
-                value = value.replace("\n", "")
-                value = f"%{value}%"
-                setattr(inputs, key, value)
+        formatted_inputs = []
+        for inp in inputs:
+            if inp:
+                inp = self.replace_wildcards(inp)
+                inp = inp.lower()
+                inp = inp.replace("\n", "")
+                inp = f"%{inp}%"
+                formatted_inputs.append(inp)
+
+        

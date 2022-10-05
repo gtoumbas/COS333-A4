@@ -22,6 +22,7 @@ def main():
     print(sys.argv)
 
     try:
+
         host =  args.host
         port =  args.port
         app = QtWidgets.QApplication(sys.argv)
@@ -60,7 +61,7 @@ def main():
         layout.setRowStretch(3, 0)
 
         submit_btton = QtWidgets.QPushButton("Submit")
-        layout.addWidget(submit_btton , 1, 2)
+        layout.addWidget(submit_btton, 0, 2, 4, 1)
 
         # Adding list widget
         listWidget = QtWidgets.QListWidget()
@@ -74,13 +75,15 @@ def main():
 
         # Set size of window to a quarter of the screen
         screen = QtWidgets.QDesktopWidget().screenGeometry()
-        window.resize(screen.width() / 2, screen.height() / 2)
+        window.resize(int(screen.width() / 2), int(screen.height() / 2))
         window.setCentralWidget(frame)
         window.show()
 
         inputs = [deptLine, numberLine, areaLine, titleLine] 
+        inputs = ["COS", "", "", ""]
         registrar_db = RegDB()
-        registrar_db.search(inputs)
+        results = registrar_db.search(inputs)
+        print(results)
         registrar_db.close()
 
         sys.exit(app.exec_())
@@ -93,4 +96,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-    
+
+
+class ClientWindow:
+
