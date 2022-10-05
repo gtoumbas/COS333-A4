@@ -5,16 +5,42 @@ import sys
 import os
 import argparse
 import socket
+import pickle
+
+from reg_db import RegDB
 
 
-def handleSubmit(sock):
-    server_sock = socket.socket()
+def handleClient(sock, db):
+    in_flo = sock.makefile(mode="rb")
+    
+    inputs = pickle.load(in_flo)
+    if inputs[0] == "SEARCH":
+        results = db.search(inputs[1:])
+        out_flo = sock.makefile(mode="wb")
+        pickle.dump(results, out_flo)
+        out_flo.flush()
+    else:
+        # Get details 
+        pass
+
+    results = db.search(inputs)
+
+    out_flo = sock.makefile(mode="wb")
+    pickle.dump(results, out_flo)
+    out_flo.flush()
+    # search 
+    # details
+
+
 
 
 def main():
     """
     Reads arguments from the command line and opens the GUI or the help message
     """
+    db = RegDB()
+
+    print("hello")
     if len(sys.argv) != 2:
         print("Usage: python %s host port file' % sys.argv[0]")
         sys.exit(2)
@@ -25,7 +51,7 @@ def main():
                         help='the port at which the server should listen')
 
     args = parser.parse_args()
-    port = args.port
+    print("test")
 
     try:
         port = int(sys.argv[1])
@@ -46,9 +72,14 @@ def main():
                     print('Opened socket')
                     print('Server IP addr and po ', sock.getsockname())
                     print('Client IP addr and po ', client_addr)
-                    handle_client(sock)
+                    handleClient(sock, db)
             except Exception as ex:
                 print(ex, file=sys.stderr)
+    
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()

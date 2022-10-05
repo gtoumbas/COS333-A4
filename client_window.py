@@ -1,18 +1,19 @@
 import sys
 import socket
+import pickle 
 
 from PyQt5 import QtWidgets
 class ClientWindow:
 
     def __init__(self, argv):
         self.host = argv[1]
-        self.port = argv[2]
+        self.port = int(argv[2])
         self.app = QtWidgets.QApplication(argv)
         self.window = QtWidgets.QMainWindow()
     
 
 
-    def createWindow(self):
+    def create_window(self):
         self.window.setWindowTitle("Princeton University Class Search")
         frame = QtWidgets.QFrame()
         layout = QtWidgets.QGridLayout()
@@ -20,25 +21,25 @@ class ClientWindow:
         # Dept label and text 
         deptLabel = QtWidgets.QLabel("Dept:")
         self.deptLine = QtWidgets.QLineEdit("")
-        layout.addWidget(self.deptLabel, 0, 0)
+        layout.addWidget(deptLabel, 0, 0)
         layout.addWidget(self.deptLine, 0, 1)
 
         # Number label and text 
         numberLabel = QtWidgets.QLabel("Number:")
         self.numberLine = QtWidgets.QLineEdit("")
-        layout.addWidget(self.numberLabel, 1, 0)
+        layout.addWidget(numberLabel, 1, 0)
         layout.addWidget(self.numberLine, 1, 1)
 
         # Area label and text 
         areaLabel = QtWidgets.QLabel("Area:")
-        self.reaLine = QtWidgets.QLineEdit("")
-        layout.addWidget(self.areaLabel, 2, 0)
+        self.areaLine = QtWidgets.QLineEdit("")
+        layout.addWidget(areaLabel, 2, 0)
         layout.addWidget(self.areaLine, 2, 1)
 
         # Title label and text 
         titleLabel = QtWidgets.QLabel("Title:")
         self.titleLine = QtWidgets.QLineEdit("")
-        layout.addWidget(self.titleLabel, 3, 0)
+        layout.addWidget(titleLabel, 3, 0)
         layout.addWidget(self.titleLine, 3, 1)
 
         layout.setRowStretch(0, 0)
@@ -48,8 +49,7 @@ class ClientWindow:
 
         self.submit_btton = QtWidgets.QPushButton("Submit")
         layout.addWidget(self.submit_btton, 0, 2, 4, 1)
-        self.submit_btton.clicked.connect(
-            self.submitClicked(self.host, self.port))
+        self.submit_btton.clicked.connect(self.submit_clicked)
 
         # Adding list widget
         listWidget = QtWidgets.QListWidget()
@@ -66,6 +66,7 @@ class ClientWindow:
         self.window.resize(int(screen.width() / 2), int(screen.height() / 2))
         self.window.setCentralWidget(frame)
         self.window.show()
+        sys.exit(self.app.exec_())
 
     def connectToServer(self):
         pass
@@ -82,24 +83,38 @@ class ClientWindow:
     def closeApp(self):
         pass
 
-    def submitClicked(self, host, port):
+    def submit_clicked(self):
         inputs = [
             self.deptLine.text(),
             self.numberLine.text(),
             self.areaLine.text(),
             self.titleLine.text()
         ]
+        inputs.insert(0, "SEARCH")
+        print("inputs: ", inputs)
 
         try:
             with socket.socket() as sock:
-                sock.connect((host, port))
-                out_flo = sock.makefile(mode="w", encoding="utf-8")
+                print("test")
+                sock.connect((self.host, self.port))
+                print("test1214")
+                out_flo = sock.makefile(mode="wb")
+                print(out_flo)
+                pickle.dump(inputs, out_flo)
 
-                for i in inputs:
-                    out_flo.write(i + "\n")
-                    out_flo.flush()
+                out_flo.flush()
+
+                in_flo = sock.makefile(mode="rb")
+                results = pickle.load(in_flo)
+
 
         except Exception as ex:
             print(ex, file=sys.stderr)
             sys.exit(1)
+        
+
+    def display_search_results(self):
+        
+
+
 
