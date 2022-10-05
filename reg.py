@@ -12,7 +12,7 @@ def main():
     """
     if len(sys.argv) != 3:
         print("Usage: python %s host port file’ % sys.argv[0]")
-        sys.exit(1)
+        sys.exit(2)
 
     parser = argparse.ArgumentParser(description='Client for the registrar application')
     parser.add_argument(metavar='host', type=int,
