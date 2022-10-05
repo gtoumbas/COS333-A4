@@ -1,44 +1,84 @@
 """
 Authors: George Toumbas, Shanzay Waseem
 """
+import sys
+import PyQt5.QtWidgets
 import argparse
 from reg_db import RegDB
 
-
 def main():
     """
-    Reads arguments from the command line and
-    searches the registrar database.
+    Reads arguments from the command line and opens the GUI or the help message
     """
-    # Information from https://docs.python.org/3/howto/argparse.html
+    if len(sys.argv) != 3:
+        print("Usage: python %s host port file’ % sys.argv[0]")
+        sys.exit(1)
 
-    parser = argparse.ArgumentParser(
-        allow_abbrev=False,
-        description="Registrar application: show overviews of classes")
-    parser.add_argument(
-        '-d', metavar='dept',
-        help="show only those classes whose department contains dept",
-        type=str)
-    parser.add_argument(
-        '-n', metavar='num',
-        help="show only those classes whose course number contains num",
-        type=str)
-    parser.add_argument(
-        '-a', metavar='area',
-        help="show only those classes whose distrib area contains area",
-        type=str)
-    parser.add_argument(
-        '-t', metavar='title',
-        help="show only those classes" +\
-            " whose course title contains title",
-        type=str)
+    parser = argparse.ArgumentParser(description='Client for the registrar application')
+    parser.add_argument(metavar='host', type=int,
+                    help='the host on which the server is running')
+    parser.add_argument(metavar='port', type=int,
+                    help='the port at which the server is listening')
 
     args = parser.parse_args()
 
-    registrar_db = RegDB()
-    registrar_db.search(args)
-    registrar_db.close()
+    try:
+        host =  sys.argv[1]
+        port =  sys.argv[2]
+        app = PyQt5.QtWidgets.QApplication(sys.argv)
+        window = PyQt5.QtWidgets.QMainWindow()
+        window.setWindowTitle("Princeton University Class Search")
+        frame = PyQt5.QtWidgets.QFrame()
+        layout = PyQt5.QtWidgets.QGridLayout()
+        
+        # Dept label and text 
+        deptLabel = PyQt5.QtWidgets.QLabel("Dept:")
+        deptLine = PyQt5.QtWidgets.QLineEdit("")
+        layout.addWidget(deptLabel, 0, 0)
+        layout.addWidget(deptLine, 1, 0)
 
+        # Number label and text 
+        numberLabel = PyQt5.QtWidgets.QLabel("Number:")
+        numberLine = PyQt5.QtWidgets.QLineEdit("")
+        layout.addWidget(numberLabel, 0, 1)
+        layout.addWidget(numberLine, 1, 1)
+
+        # Area label and text 
+        areaLabel = PyQt5.QtWidgets.QLabel("Area:")
+        areaLine = PyQt5.QtWidgets.QLineEdit("")
+        layout.addWidget(areaLabel, 0, 2)
+        layout.addWidget(areaLine, 1, 2)
+
+        # Title label and text 
+        titleLabel = PyQt5.QtWidgets.QLabel("Title:")
+        titleLine = PyQt5.QtWidgets.QLineEdit("")
+        layout.addWidget(titleLabel, 0, 3)
+        layout.addWidget(titleLine, 1, 3)
+
+        layout.setRowStretch(0, 0)
+        layout.setRowStretch(1, 1)
+        layout.setRowStretch(2, 0)
+        layout.setRowStretch(3, 0)
+
+        button = PyQt5.QtWidgets.QPushButton("Submit")
+        layout.addWidget(button, 2, 0)
+
+        # deptLine, numberLine, areaLine, titleLine is where the 
+        # inputs are instead of args and so self needs to be made
+        # of those instead of args 
+
+        frame.setLayout(layout)
+        window.show()
+        sys.exit(app.exec_())
+
+
+    except Exception as ex:
+        print(ex, file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
+
+    #registrar_db = RegDB()
+    #registrar_db.search(args)
+    #registrar_db.close()
