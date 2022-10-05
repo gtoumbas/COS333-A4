@@ -52,8 +52,9 @@ class ClientWindow:
         self.submit_btton.clicked.connect(self.submit_clicked)
 
         # Adding list widget
-        listWidget = QtWidgets.QListWidget()
-        layout.addWidget(listWidget, 4, 0, 1, 3)
+        self.listWidget = QtWidgets.QListWidget()
+        layout.addWidget(self.listWidget, 4, 0, 1, 3)
+        # self.listWidget.itemClicked.connect(self.details_clicked)
 
         # deptLine, numberLine, areaLine, titleLine is where the 
         # inputs are instead of args and so self needs to be made
@@ -91,13 +92,10 @@ class ClientWindow:
             self.titleLine.text()
         ]
         inputs.insert(0, "SEARCH")
-        print("inputs: ", inputs)
 
         try:
             with socket.socket() as sock:
-                print("test")
                 sock.connect((self.host, self.port))
-                print("test1214")
                 out_flo = sock.makefile(mode="wb")
                 print(out_flo)
                 pickle.dump(inputs, out_flo)
@@ -106,15 +104,25 @@ class ClientWindow:
 
                 in_flo = sock.makefile(mode="rb")
                 results = pickle.load(in_flo)
-
+                self.display_search_results(results)
 
         except Exception as ex:
             print(ex, file=sys.stderr)
             sys.exit(1)
         
 
-    def display_search_results(self):
+    def display_search_results(self, results):
+        for r in results:
+            class_id, dept, number, area, title = r
+            self.listWidget.addItem(f"{class_id:>5} {dept:>4} {number:>6} {area:>4} {title}")
+
+
+    def details_clicked(self):
+        pass
         
+
+        
+
 
 
 

@@ -38,6 +38,8 @@ class RegDB:
 
     DB_URL = 'file:reg.sqlite?mode=ro'
 
+    # FIXME REMBER TO CHANGE DB CONNECTION
+
     def __init__(self):
 
         try:
