@@ -11,21 +11,19 @@ def main():
     """
     Reads arguments from the command line and opens the GUI or the help message
     """
-    if len(sys.argv) != 3:
-        print("Usage: python %s host port file’ % sys.argv[0]")
-        sys.exit(2)
 
     parser = argparse.ArgumentParser(description='Client for the registrar application')
-    parser.add_argument(metavar='host', type=int,
+    parser.add_argument('host', metavar='host', type=int,
                     help='the host on which the server is running')
-    parser.add_argument(metavar='port', type=int,
+    parser.add_argument('port', metavar='port', type=int,
                     help='the port at which the server is listening')
 
     args = parser.parse_args()
+    print(sys.argv)
 
     try:
-        host =  sys.argv[1]
-        port =  sys.argv[2]
+        host =  args.host
+        port =  args.port
         app = QtWidgets.QApplication(sys.argv)
         window = QtWidgets.QMainWindow()
         window.setWindowTitle("Princeton University Class Search")
@@ -36,39 +34,48 @@ def main():
         deptLabel = QtWidgets.QLabel("Dept:")
         deptLine = QtWidgets.QLineEdit("")
         layout.addWidget(deptLabel, 0, 0)
-        layout.addWidget(deptLine, 1, 0)
+        layout.addWidget(deptLine, 0, 1)
 
         # Number label and text 
         numberLabel = QtWidgets.QLabel("Number:")
         numberLine = QtWidgets.QLineEdit("")
-        layout.addWidget(numberLabel, 0, 1)
+        layout.addWidget(numberLabel, 1, 0)
         layout.addWidget(numberLine, 1, 1)
 
         # Area label and text 
         areaLabel = QtWidgets.QLabel("Area:")
         areaLine = QtWidgets.QLineEdit("")
-        layout.addWidget(areaLabel, 0, 2)
-        layout.addWidget(areaLine, 1, 2)
+        layout.addWidget(areaLabel, 2, 0)
+        layout.addWidget(areaLine, 2, 1)
 
         # Title label and text 
         titleLabel = QtWidgets.QLabel("Title:")
         titleLine = QtWidgets.QLineEdit("")
-        layout.addWidget(titleLabel, 0, 3)
-        layout.addWidget(titleLine, 1, 3)
+        layout.addWidget(titleLabel, 3, 0)
+        layout.addWidget(titleLine, 3, 1)
 
         layout.setRowStretch(0, 0)
         layout.setRowStretch(1, 1)
         layout.setRowStretch(2, 0)
         layout.setRowStretch(3, 0)
 
-        button = QtWidgets.QPushButton("Submit")
-        layout.addWidget(button, 2, 0)
+        submit_btton = QtWidgets.QPushButton("Submit")
+        layout.addWidget(submit_btton , 1, 2)
+
+        # Adding list widget
+        listWidget = QtWidgets.QListWidget()
+        layout.addWidget(listWidget, 4, 0, 1, 3)
 
         # deptLine, numberLine, areaLine, titleLine is where the 
         # inputs are instead of args and so self needs to be made
         # of those instead of args 
 
         frame.setLayout(layout)
+
+        # Set size of window to a quarter of the screen
+        screen = QtWidgets.QDesktopWidget().screenGeometry()
+        window.resize(screen.width() / 2, screen.height() / 2)
+        window.setCentralWidget(frame)
         window.show()
 
         inputs = [deptLine, numberLine, areaLine, titleLine] 
