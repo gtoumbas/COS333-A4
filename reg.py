@@ -2,7 +2,8 @@
 Authors: George Toumbas, Shanzay Waseem
 """
 import sys
-import PyQt5.QtWidgets
+
+from PyQt5 import QtWidgets 
 import argparse
 from reg_db import RegDB
 
@@ -25,33 +26,33 @@ def main():
     try:
         host =  sys.argv[1]
         port =  sys.argv[2]
-        app = PyQt5.QtWidgets.QApplication(sys.argv)
-        window = PyQt5.QtWidgets.QMainWindow()
+        app = QtWidgets.QApplication(sys.argv)
+        window = QtWidgets.QMainWindow()
         window.setWindowTitle("Princeton University Class Search")
-        frame = PyQt5.QtWidgets.QFrame()
-        layout = PyQt5.QtWidgets.QGridLayout()
+        frame = QtWidgets.QFrame()
+        layout = QtWidgets.QGridLayout()
         
         # Dept label and text 
-        deptLabel = PyQt5.QtWidgets.QLabel("Dept:")
-        deptLine = PyQt5.QtWidgets.QLineEdit("")
+        deptLabel = QtWidgets.QLabel("Dept:")
+        deptLine = QtWidgets.QLineEdit("")
         layout.addWidget(deptLabel, 0, 0)
         layout.addWidget(deptLine, 1, 0)
 
         # Number label and text 
-        numberLabel = PyQt5.QtWidgets.QLabel("Number:")
-        numberLine = PyQt5.QtWidgets.QLineEdit("")
+        numberLabel = QtWidgets.QLabel("Number:")
+        numberLine = QtWidgets.QLineEdit("")
         layout.addWidget(numberLabel, 0, 1)
         layout.addWidget(numberLine, 1, 1)
 
         # Area label and text 
-        areaLabel = PyQt5.QtWidgets.QLabel("Area:")
-        areaLine = PyQt5.QtWidgets.QLineEdit("")
+        areaLabel = QtWidgets.QLabel("Area:")
+        areaLine = QtWidgets.QLineEdit("")
         layout.addWidget(areaLabel, 0, 2)
         layout.addWidget(areaLine, 1, 2)
 
         # Title label and text 
-        titleLabel = PyQt5.QtWidgets.QLabel("Title:")
-        titleLine = PyQt5.QtWidgets.QLineEdit("")
+        titleLabel = QtWidgets.QLabel("Title:")
+        titleLine = QtWidgets.QLineEdit("")
         layout.addWidget(titleLabel, 0, 3)
         layout.addWidget(titleLine, 1, 3)
 
@@ -60,7 +61,7 @@ def main():
         layout.setRowStretch(2, 0)
         layout.setRowStretch(3, 0)
 
-        button = PyQt5.QtWidgets.QPushButton("Submit")
+        button = QtWidgets.QPushButton("Submit")
         layout.addWidget(button, 2, 0)
 
         # deptLine, numberLine, areaLine, titleLine is where the 

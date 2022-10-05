@@ -1,6 +1,7 @@
 """
 Authors: George Toumbas, Shanzay Waseem
 """
+import sys
 
 def main():
     """
