@@ -79,7 +79,7 @@ class RegDB:
         # self.display_table(results)
 
     # TODO: how to get classID?
-    def get_details(self, args):
+    def get_details(self, class_id):
         """
         Searches the database for a single class and
         displays the results.
@@ -87,8 +87,6 @@ class RegDB:
         Args:
             args (argparse.Namespace): Arguments from command line
         """
-        class_id = args.classID
-
         if not str(class_id).isdigit():
             sys.stderr.write("Error: Class ID must be a number")
             sys.exit(1)
@@ -102,7 +100,8 @@ class RegDB:
             sys.stderr.write(f"no class with classid {class_id} exists")
             sys.exit(1)
 
-        self.display_details(results)
+        details = self.display_details(results)
+        return details
 
 
     def get_search_query(self, inputs):
@@ -180,13 +179,15 @@ class RegDB:
 
     def display_details(self, results):
         """
-        Displays the results of a classid-based search.
+        Returns string of results of a classid-based search.
 
         Inputs:
             results (list): Results of the search query
         """
+
         num_columns = 13
         res = results[0]
+        final_str = ""
 
         # Checking the length of results. This should never happen,
         # as errors should be caught be when query executed
@@ -220,22 +221,24 @@ class RegDB:
         wrapped_prereqs = textwrap.fill(
             f"Prerequisites: {res[11]}", 72, break_long_words=True)
 
-        print(f"Course Id: {res[0]}\n")
-        print(f"Days: {res[1]}")
-        print(f"Start time: {res[2]}")
-        print(f"End time: {res[3]}")
-        print(f"Building: {res[4]}")
-        print(f"Room: {res[5]}\n")
-        print(dept_num)
-        print(f"Area: {res[8]}\n")
-        print(f"{wrapped_title}\n")
-        print(f"{wrapped_descrip}\n")
+        final_str += f"Course Id: {res[0]}\n\n"
+        final_str += f"Days: {res[1]}\n"
+        final_str += f"Start time: {res[2]}\n"
+        final_str += f"End time: {res[3]}\n"
+        final_str += f"Building: {res[4]}\n"
+        final_str += f"Room: {res[5]}\n\n"
+        final_str += dept_num + "\n"
+        final_str += f"Area: {res[8]}\n\n"
+        final_str += f"{wrapped_title}\n\n"
+        final_str += f"{wrapped_descrip}\n\n"
         if len(res[11]) > 0:
-            print(f"{wrapped_prereqs}\n")
+            final_str += f"{wrapped_prereqs}\n\n"
         else:
-            print("Prerequisites:\n")
+            final_str += "Prerequisites:\n\n"
         if profs[0] is not None:
-            print(f"{prof_str}")
+            final_str += f"{prof_str}"
+
+        return final_str
 
     def display_table(self, results, max_len=72):
         """

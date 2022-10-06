@@ -20,16 +20,12 @@ def handleClient(sock, db):
         pickle.dump(results, out_flo)
         out_flo.flush()
     else:
-        # Get details 
-        pass
-
-    results = db.search(inputs)
-
-    out_flo = sock.makefile(mode="wb")
-    pickle.dump(results, out_flo)
-    out_flo.flush()
-    # search 
-    # details
+        class_id = inputs[1]
+        results = db.get_details(class_id)
+        out_flo = sock.makefile(mode="wb")
+        pickle.dump(results, out_flo)
+        out_flo.flush()
+        print("test")
 
 
 

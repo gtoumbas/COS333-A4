@@ -1,8 +1,9 @@
+from inspect import classify_class_attrs
 import sys
 import socket
 import pickle 
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 class ClientWindow:
 
     def __init__(self, argv):
@@ -54,7 +55,7 @@ class ClientWindow:
         # Adding list widget
         self.listWidget = QtWidgets.QListWidget()
         layout.addWidget(self.listWidget, 4, 0, 1, 3)
-        # self.listWidget.itemClicked.connect(self.details_clicked)
+        self.listWidget.itemDoubleClicked.connect(self.class_clicked)
 
         # deptLine, numberLine, areaLine, titleLine is where the 
         # inputs are instead of args and so self needs to be made
@@ -113,12 +114,51 @@ class ClientWindow:
 
     def display_search_results(self, results):
         for r in results:
-            class_id, dept, number, area, title = r
-            self.listWidget.addItem(f"{class_id:>5} {dept:>4} {number:>6} {area:>4} {title}")
+            # class_id, dept, number, area, title = r
+            # self.listWidget.addItem(f"{class_id:>5} {dept:>4} {number:>6} {area:>4} {title}")
+            # self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
+            font = QtGui.QFont("Courier", 10)
+            # r.setFont(font)
+            self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
+
+    def class_clicked(self, item):
+        # Classid is number before first space
+        class_id = item.text().split()[0]
+        print(class_id)
+        inputs = ["DETAILS", class_id]
+
+        try:
+            with socket.socket() as sock:
+                sock.connect((self.host, self.port))
+                out_flo = sock.makefile(mode="wb")
+                print(out_flo)
+                pickle.dump(inputs, out_flo)
+
+                out_flo.flush()
+
+                in_flo = sock.makefile(mode="rb")
+                results = pickle.load(in_flo)
+                self.display_class_details(results)
+                
+
+        except Exception as ex:
+            print(ex, file=sys.stderr)
+            sys.exit(1)
 
 
-    def details_clicked(self):
-        pass
+    def display_class_details(self, results):
+        info_box = QtWidgets.QMessageBox()
+        info_box.setTitle("Class Details")
+        info_box.setText(results)
+        info_box.setIcon(QtWidgets.QMessageBox.Information)
+        info_box.setStandardButtons(QtWidgets.QMessageBox.Ok)
+
+
+        sys.exit(info_box.exec_())
+
+        
+
+
         
 
         
