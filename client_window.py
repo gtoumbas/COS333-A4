@@ -4,6 +4,7 @@ import socket
 import pickle 
 
 from PyQt5 import QtWidgets, QtGui, QtCore
+
 class ClientWindow:
 
     def __init__(self, argv):
@@ -55,21 +56,6 @@ class ClientWindow:
 
         self.submit_btton = QtWidgets.QPushButton("Submit")
         layout.addWidget(self.submit_btton, 0, 2, 4, 1)
-        self.submit_btton.clicked.connect(self.submit_clicked)
-
-        # Adding list widget
-        self.listWidget = QtWidgets.QListWidget()
-        layout.addWidget(self.listWidget, 4, 0, 1, 3)   
-        # Display all results initially
-        self.submit_clicked()
-        self.listWidget.itemDoubleClicked.connect(self.class_clicked)
-        #  Change to cmd+o for mac
-        if platform.system() == "Darwin":
-            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self.listWidget)
-        else:
-            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Return"), self.listWidget)
-        enterShortcut.setContext(QtCore.Qt.WidgetShortcut)
-        enterShortcut.activated.connect(lambda: self.class_clicked(self.listWidget.currentItem()))
 
         frame.setLayout(layout)
 
@@ -78,6 +64,26 @@ class ClientWindow:
         self.window.resize(int(screen.width() / 2), int(screen.height() / 2))
         self.window.setCentralWidget(frame)
         self.window.show()
+        
+
+        # Adding list widget
+        self.listWidget = QtWidgets.QListWidget()
+        layout.addWidget(self.listWidget, 4, 0, 1, 3) 
+
+        self.submit_btton.clicked.connect(self.submit_clicked)  
+        
+        # Display all results initially
+        self.submit_clicked()
+        self.listWidget.itemDoubleClicked.connect(self.class_clicked)
+
+        #  Change to cmd+o for mac
+        if platform.system() == "Darwin":
+            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self.listWidget)
+        else:
+            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Return"), self.listWidget)
+        enterShortcut.setContext(QtCore.Qt.WidgetShortcut)
+        enterShortcut.activated.connect(lambda: self.class_clicked(self.listWidget.currentItem()))
+
         sys.exit(self.app.exec_())
 
     def send_request(self, request):
@@ -104,13 +110,14 @@ class ClientWindow:
     def check_response(self, response):
         if not response:
             QtWidgets.QMessageBox.critical(
-                self.window, "Server Error", "No response from server", buttons=QtWidgets.QMessageBox.Ok)
+                self.window, "Server Error",
+                "A server error occurred. Please contact the system administrator.", 
+                buttons=QtWidgets.QMessageBox.Ok)
             return False
-
         if response[0] == "INVALID_CLASSID":
             QtWidgets.QMessageBox.critical(
-                self.window, "Error", "no class with classId %s exists" % response[1], buttons=QtWidgets.QMessageBox.Ok)
-
+                self.window, "Error", "no class with classId %s exists" % response[1], 
+                buttons=QtWidgets.QMessageBox.Ok)
             return False
 
         return True
@@ -133,23 +140,15 @@ class ClientWindow:
 
 
     def display_search_results(self, results):
-        try:
-            for r in results:
-                class_id, dept, number, area, title = r
-                self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
-                self.listWidget.setCurrentRow(0)
-        except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
-
-        # Activate the first item in the list
+        for r in results:
+            class_id, dept, number, area, title = r
+            self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
+            self.listWidget.setCurrentRow(0)
 
 
     def class_clicked(self, item):
-        print("clicked")
-        print(type(item))
         # Classid is number before first space
         class_id = item.text().split()[0]
-        print(class_id)
         inputs = ["DETAILS", class_id]
 
         # Send request to server
@@ -165,4 +164,4 @@ class ClientWindow:
             results, 
             buttons=QtWidgets.QMessageBox.Ok,
             defaultButton=QtWidgets.QMessageBox.Ok
-            )
+        )
