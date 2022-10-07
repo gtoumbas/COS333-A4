@@ -1,35 +1,28 @@
 gtoumbas_swaseem
 
+George Toumbas, Shanzay Waseem, Assignment 2
+
+
 Contributions:
 
 George: 
 
-After Shanzay and I decided on how we wanted to structure our code, 
-I wrote a substantial portion of the intial version of reg_db.py. I wrote
-working versions of the get_search_query, get_details_query, and display_table 
-methods. I also wrote a python script which reads arguments from a txt file
-and compares the outputs of our program on those arguments with the outputs
-of the reference .pyc files. Using this program, I tested regdetails.py on every
-entry classid in the database and tested reg.py against all example args on the
-assignment page + some additional args.  
+I edited reg_db.py ito change how the inputs were being received as they are no longer command-line arguments. I also edited how the data was being returned. I was responsible for creating the sockets and their transfers, ensuring that all the sockets and connections were transient.  In addition, I created the window for reg_details with display_class_details(), matching it the reference given. Using the code from class, I wrote regserver.py. Furthermore, I wrote a python script which reads arguments from a txt file and compares the outputs of our program with the outputs of the reference .pyc files. Using this program, I tested regdetails.py on every entry classid and tested reg.py against all example args on the assignment page + some additional args.  
 
 
 Shanzay: 
 
-Shanzay was responsible for writing the regdetails.py and reg.py files. She 
-also wrote the replace_wildcards and format_args methods in reg_db.py. She 
-implemented the exception handling in reg_db.py and she revised the code 
-in reg_db.py to protect against SQL injections. She also wrote a majority of 
-the doctstrings and handled pylint checking.
+I wrote reg.py, focusing on the execution with -h as a command line argument. I then worked on creating the window display for 'Princeton University Class Search' with ClientWindow. As now the inputs came from the textboxes when the submit button was clicked, I was responsible for making the submit button work and ensuring the data was being transferred to regserver.py. In addition, I worked on display_search_results, to make the returned data look in the ListWidget just as it did in the example. Once our code was completed, I handled the pylint checking and the readme file.
 
 Outside Help:
 Just python online documentation.
+
+Sources of Information: 
+https://docs.python.org/3/howto/argparse.html --> this is where we got the information for argparse
 
 Time Spent: ~15 hours
 
 Assesment of Assignment:
 
-I enjoyed it! I had never interacted with a SQL db from python. I also feel 
-that I learned a lot from writing automated testing. It was a lot more work 
-than I initially anticipated. Also, it is worth noting that Shanzay was quite 
-sick for over a week with covid during this assigment.
+I thoroughly enjoyed this assignment as a very stark contrast to the learnings I took away from the first one. As both my partner and I have no background with GUI, and in particular with PyQt5, we learnt a lot about the front-end of web applications and the difficulty, but also importance, of creating a user-friendly design. We also learnt the different manners to visualize data and interact with users through an interface, and find these teachings particularly useful for our 333 project and other future projects. A suggestion for improvement would be to perhaps provide the information for the exact specifications of the exampler windows in terms of font for the text, the look in itself, etc. Much of the design was guess work and just from looking, seeing if there was a difference in our window and the example one.  
+
