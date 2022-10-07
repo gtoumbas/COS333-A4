@@ -80,21 +80,40 @@ class ClientWindow:
         self.window.show()
         sys.exit(self.app.exec_())
 
+    def send_request(self, request):
+        try:
+            with socket.socket() as s:
+                s.connect((self.host, self.port))
+                out_flo = s.makefile('wb')
+                pickle.dump(request, out_flo)
+                out_flo.flush()
 
-    def connectToServer(self):
-        pass
+                # Receive response
+                in_flo = s.makefile('rb')
+                response = pickle.load(in_flo)
+                response_ok = self.check_response(response)
+                if not response_ok:
+                    return None
+                return response
+            
+        except Exception as ex:
+            QtWidgets.QMessageBox.critical(
+                self.window, "Server Error", str(ex), buttons=QtWidgets.QMessageBox.Ok)
+            return None
 
-    def sendRequest(self):
-        pass
+    def check_response(self, response):
+        if not response:
+            QtWidgets.QMessageBox.critical(
+                self.window, "Server Error", "No response from server", buttons=QtWidgets.QMessageBox.Ok)
+            return False
 
-    def receiveResponse(self):
-        pass
+        if response[0] == "INVALID_CLASSID":
+            QtWidgets.QMessageBox.critical(
+                self.window, "Error", "no class with classId %s exists" % response[1], buttons=QtWidgets.QMessageBox.Ok)
 
-    def clicked(self):
-        pass
+            return False
 
-    def closeApp(self):
-        pass
+        return True
 
     # submit clicked is for when you are grabbing the queries
     def submit_clicked(self):
@@ -108,23 +127,10 @@ class ClientWindow:
 
         # Clear list widget
         self.listWidget.clear() 
+        response = self.send_request(inputs)
+        if response:
+            self.display_search_results(response)
 
-        try:
-            with socket.socket() as sock:
-                sock.connect((self.host, self.port))
-                out_flo = sock.makefile(mode="wb")
-                print(out_flo)
-                pickle.dump(inputs, out_flo)
-
-                out_flo.flush()
-
-                in_flo = sock.makefile(mode="rb")
-                results = pickle.load(in_flo)
-                self.display_search_results(results)
-
-        except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
-        
 
     def display_search_results(self, results):
         try:
@@ -138,8 +144,6 @@ class ClientWindow:
         # Activate the first item in the list
 
 
-
-
     def class_clicked(self, item):
         print("clicked")
         print(type(item))
@@ -148,43 +152,17 @@ class ClientWindow:
         print(class_id)
         inputs = ["DETAILS", class_id]
 
-        try:
-            with socket.socket() as sock:
-                sock.connect((self.host, self.port))
-                out_flo = sock.makefile(mode="wb")
-                print(out_flo)
-                pickle.dump(inputs, out_flo)
-
-                out_flo.flush()
-
-                in_flo = sock.makefile(mode="rb")
-                results = pickle.load(in_flo)
-                if results[0] == "InavlidClassId":
-                    self.display_ClassId_err(class_id)
-                    return
-                
-                self.display_class_details(results)
-                
-
-        except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
-
+        # Send request to server
+        response = self.send_request(inputs)
+        if response:
+            self.display_class_details(response)
+        
 
     def display_class_details(self, results):
-        try:
-            info_box = QtWidgets.QMessageBox.information(
-                self.window, 
-                "Class Details", 
-                results, 
-                buttons=QtWidgets.QMessageBox.Ok,
-                defaultButton=QtWidgets.QMessageBox.Ok
-                )
-        except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
-
-
-    def display_ClassId_err(self, classId):
-        try:
-            QtWidgets.QMessageBox.critical(self.window, "Error", "no class with classId %s exists" % classId, buttons=QtWidgets.QMessageBox.Ok)
-        except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
+        info_box = QtWidgets.QMessageBox.information(
+            self.window, 
+            "Class Details", 
+            results, 
+            buttons=QtWidgets.QMessageBox.Ok,
+            defaultButton=QtWidgets.QMessageBox.Ok
+            )

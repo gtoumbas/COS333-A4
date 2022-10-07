@@ -100,7 +100,7 @@ class RegDB:
         # Error if the query is unsuccessful
         except Exception as error:
             sys.stderr.write(f"{sys.argv[0]}: {error}")
-            return "InvalidClassId"
+            return ["INVALID_CLASSID", class_id]
 
         if len(results) == 0:
             sys.stderr.write(f"no class with classid {class_id} exists")
