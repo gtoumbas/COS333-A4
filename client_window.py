@@ -96,6 +96,7 @@ class ClientWindow:
     def closeApp(self):
         pass
 
+    # submit clicked is for when you are grabbing the queries
     def submit_clicked(self):
         inputs = [
             self.deptLine.text(),
@@ -121,8 +122,8 @@ class ClientWindow:
                 results = pickle.load(in_flo)
                 self.display_search_results(results)
 
-        except Exception as ex:
-            print(ex, file=sys.stderr)
+        except Exception as err:
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
         
 
     def display_search_results(self, results):
@@ -166,7 +167,7 @@ class ClientWindow:
                 
 
         except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
 
 
     def display_class_details(self, results):
@@ -179,11 +180,11 @@ class ClientWindow:
                 defaultButton=QtWidgets.QMessageBox.Ok
                 )
         except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
 
 
     def display_ClassId_err(self, classId):
         try:
-            QtWidgets.QMessageBox.critical(self.window, "Error", "no class with classId %s exists" % classId)
+            QtWidgets.QMessageBox.critical(self.window, "Error", "no class with classId %s exists" % classId, buttons=QtWidgets.QMessageBox.Ok)
         except Exception as err:
-            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err), buttons=QtWidgets.QMessageBox.Ok)
