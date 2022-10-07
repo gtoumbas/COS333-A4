@@ -16,7 +16,7 @@ class ClientWindow:
 
     def create_window(self):
         font = QtGui.QFont("Courier", 10)
-        self.app.setFont(font)
+        self.window.setFont(font)
         self.window.setWindowTitle("Princeton University Class Search")
         frame = QtWidgets.QFrame()
         layout = QtWidgets.QGridLayout()
@@ -76,7 +76,7 @@ class ClientWindow:
         self.submit_clicked()
         self.listWidget.itemDoubleClicked.connect(self.class_clicked)
 
-        #  Change to cmd+o for mac
+        #  Get details from enter key or from cmd+o(mac) 
         if platform.system() == "Darwin":
             enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self.listWidget)
         else:
@@ -108,7 +108,9 @@ class ClientWindow:
             return None
 
     def check_response(self, response):
-        if not response:
+        if len(response) == 0:
+            return True
+        if response[0] == "ERROR":
             QtWidgets.QMessageBox.critical(
                 self.window, "Server Error",
                 "A server error occurred. Please contact the system administrator.", 
@@ -116,7 +118,7 @@ class ClientWindow:
             return False
         if response[0] == "INVALID_CLASSID":
             QtWidgets.QMessageBox.critical(
-                self.window, "Error", "no class with classId %s exists" % response[1], 
+                self.window, "Error", f"No Class With classId {response[1]} Exists", 
                 buttons=QtWidgets.QMessageBox.Ok)
             return False
 
@@ -150,6 +152,8 @@ class ClientWindow:
         # Classid is number before first space
         class_id = item.text().split()[0]
         inputs = ["DETAILS", class_id]
+
+
 
         # Send request to server
         response = self.send_request(inputs)

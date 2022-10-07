@@ -12,7 +12,16 @@ from reg_db import RegDB
 
 def handleClient(sock, db):
     in_flo = sock.makefile(mode="rb")
-    db.connect() # Opens connection to db 
+    err = db.connect() # Opens connection to db 
+
+    # Double check this. Might be writing to stderr twice
+    if err:
+        sys.stderr.write(f"{sys.argv[0]}: {err}")
+        response = ["ERROR"]
+        out_flo = sock.makefile(mode="wb")
+        pickle.dump(response, out_flo)
+        out_flo.flush()
+        return
     
     inputs = pickle.load(in_flo)
     if inputs[0] == "SEARCH":

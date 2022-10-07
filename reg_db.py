@@ -4,6 +4,7 @@ Authors: George Toumbas, Shanzay Waseem
 Contains the class RegDB, which can search and
 display information from the registrar database.
 """
+from re import A
 import sqlite3
 import textwrap
 import sys
@@ -50,10 +51,11 @@ class RegDB:
                 self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
             self.connected = True
+            return None
 
         except Exception as error:
             sys.stderr.write(f"{sys.argv[0]}: {error}")
-            sys.exit(1)
+            return error
 
 
     def close(self):
@@ -73,7 +75,7 @@ class RegDB:
         """
         if not self.connected:
             sys.stderr.write("Error: Not connected to database")
-            sys.exit(1)
+
         self.format_inputs(inputs)
         query = self.get_search_query(inputs)
         # Parameters set to fill in prepared statements
@@ -83,7 +85,8 @@ class RegDB:
         # Error if the query is unsuccessful
         except Exception as error:
             sys.stderr.write(f"{sys.argv[0]}: {error}")
-            sys.exit(1)
+            return ["ERROR", inputs]
+    
         return results
 
         # self.display_table(results)
@@ -113,11 +116,11 @@ class RegDB:
         # Error if the query is unsuccessful
         except Exception as error:
             sys.stderr.write(f"{sys.argv[0]}: {error}")
-            return ["INVALID_CLASSID", class_id]
+            return ["ERROR", class_id]
 
         if len(results) == 0:
-            sys.stderr.write(f"no class with classid {class_id} exists")
-            sys.exit(1)
+            sys.stderr.write(f"No class with classid {class_id} exists")
+            return ["INVALID_CLASSID", class_id]
 
         details = self.display_details(results)
         return details
@@ -233,12 +236,12 @@ class RegDB:
         # Removing the last newline
         prof_str = prof_str[:-1]
 
-        wrapped_descrip = textwrap.fill(
-            f"Description: {res[10]}", 72, break_long_words=False)
-        wrapped_title = textwrap.fill(
-            f"Title: {res[9]}", 72, break_long_words=False)
-        wrapped_prereqs = textwrap.fill(
-            f"Prerequisites: {res[11]}", 72, break_long_words=True)
+        # wrapped_descrip = textwrap.fill(
+        #     f"Description: {res[10]}", 72, break_long_words=False)
+        # wrapped_title = textwrap.fill(
+        #     f"Title: {res[9]}", 72, break_long_words=False)
+        # wrapped_prereqs = textwrap.fill(
+        #     f"Prerequisites: {res[11]}", 72, break_long_words=True)
 
         final_str += f"Course Id: {res[0]}\n\n"
         final_str += f"Days: {res[1]}\n"
@@ -248,10 +251,13 @@ class RegDB:
         final_str += f"Room: {res[5]}\n\n"
         final_str += dept_num + "\n"
         final_str += f"Area: {res[8]}\n\n"
-        final_str += f"{wrapped_title}\n\n"
-        final_str += f"{wrapped_descrip}\n\n"
+        final_str += f"Title: {res[9]}\n\n"
+        final_str += f"Description: {res[10]}\n\n"
+        # final_str += f"{wrapped_title}\n\n"
+        # final_str += f"{wrapped_descrip}\n\n"
         if len(res[11]) > 0:
-            final_str += f"{wrapped_prereqs}\n\n"
+            final_str += f"Prerequisites: {res[11]}\n\n"
+            # final_str += f"{wrapped_prereqs}\n\n"
         else:
             final_str += "Prerequisites:\n\n"
         if profs[0] is not None:
