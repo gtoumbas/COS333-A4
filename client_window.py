@@ -15,6 +15,8 @@ class ClientWindow:
 
 
     def create_window(self):
+        font = QtGui.QFont("Courier", 10)
+        self.app.setFont(font)
         self.window.setWindowTitle("Princeton University Class Search")
         frame = QtWidgets.QFrame()
         layout = QtWidgets.QGridLayout()
@@ -22,24 +24,28 @@ class ClientWindow:
         # Dept label and text 
         deptLabel = QtWidgets.QLabel("Dept:")
         self.deptLine = QtWidgets.QLineEdit("")
+        self.deptLine.returnPressed.connect(self.submit_clicked)
         layout.addWidget(deptLabel, 0, 0)
         layout.addWidget(self.deptLine, 0, 1)
 
         # Number label and text 
         numberLabel = QtWidgets.QLabel("Number:")
         self.numberLine = QtWidgets.QLineEdit("")
+        self.numberLine.returnPressed.connect(self.submit_clicked)
         layout.addWidget(numberLabel, 1, 0)
         layout.addWidget(self.numberLine, 1, 1)
 
         # Area label and text 
         areaLabel = QtWidgets.QLabel("Area:")
         self.areaLine = QtWidgets.QLineEdit("")
+        self.areaLine.returnPressed.connect(self.submit_clicked)
         layout.addWidget(areaLabel, 2, 0)
         layout.addWidget(self.areaLine, 2, 1)
 
         # Title label and text 
         titleLabel = QtWidgets.QLabel("Title:")
         self.titleLine = QtWidgets.QLineEdit("")
+        self.titleLine.returnPressed.connect(self.submit_clicked)
         layout.addWidget(titleLabel, 3, 0)
         layout.addWidget(self.titleLine, 3, 1)
 
@@ -94,6 +100,8 @@ class ClientWindow:
         ]
         inputs.insert(0, "SEARCH")
 
+        
+
         try:
             with socket.socket() as sock:
                 sock.connect((self.host, self.port))
@@ -114,12 +122,9 @@ class ClientWindow:
 
     def display_search_results(self, results):
         for r in results:
-            # class_id, dept, number, area, title = r
-            # self.listWidget.addItem(f"{class_id:>5} {dept:>4} {number:>6} {area:>4} {title}")
+            class_id, dept, number, area, title = r
+            self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
             # self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
-            font = QtGui.QFont("Courier", 10)
-            # r.setFont(font)
-            self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
 
     def class_clicked(self, item):
         # Classid is number before first space
@@ -148,7 +153,8 @@ class ClientWindow:
 
     def display_class_details(self, results):
         info_box = QtWidgets.QMessageBox()
-        info_box.setTitle("Class Details")
+        # info_box .about("Title")
+        # info_box.setWindowTitle("Class Details")
         info_box.setText(results)
         info_box.setIcon(QtWidgets.QMessageBox.Information)
         info_box.setStandardButtons(QtWidgets.QMessageBox.Ok)
