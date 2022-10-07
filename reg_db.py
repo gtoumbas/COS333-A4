@@ -94,7 +94,13 @@ class RegDB:
         query = self.get_details_query()
         # Parameters set to fill in prepared statements
         parameters = [class_id]
-        results = self.cur.execute(query, parameters).fetchall()
+
+        try:
+            results = self.cur.execute(query, parameters).fetchall()
+        # Error if the query is unsuccessful
+        except Exception as error:
+            sys.stderr.write(f"{sys.argv[0]}: {error}")
+            return "InvalidClassId"
 
         if len(results) == 0:
             sys.stderr.write(f"no class with classid {class_id} exists")

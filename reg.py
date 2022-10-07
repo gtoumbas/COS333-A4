@@ -27,17 +27,9 @@ def main():
         cw.create_window()
         print("hello")
 
-
-
-
     except Exception as ex:
         print(ex, file=sys.stderr)
         sys.exit(1)
-
-    # inputs = ['COS', '', '', '']
-    # db = RegDB()
-    # print(db.search(inputs))
-    # db.close()
 
 
 if __name__ == '__main__':

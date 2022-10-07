@@ -136,12 +136,13 @@ class ClientWindow:
         
 
     def display_search_results(self, results):
-        for r in results:
-            class_id, dept, number, area, title = r
-            self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
+        try:
+            for r in results:
+                class_id, dept, number, area, title = r
+                self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
+        except Exception as err:
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
 
-        # Activate first item in list
-        self.listWidget.setCurrentRow(0)
 
     def class_clicked(self, item):
         print("clicked")
@@ -162,32 +163,26 @@ class ClientWindow:
 
                 in_flo = sock.makefile(mode="rb")
                 results = pickle.load(in_flo)
+                if results[0] == "InavlidClassId":
+                    self.display_ClassId_err(class_id)
+                
                 self.display_class_details(results)
                 
 
-        except Exception as ex:
-            print(ex, file=sys.stderr)
-            sys.exit(1)
+        except Exception as err:
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
 
 
     def display_class_details(self, results):
-        info_box = QtWidgets.QMessageBox()
-        # info_box .about("Title")
-        # info_box.setWindowTitle("Class Details")
-        info_box.setText(results)
-        info_box.setIcon(QtWidgets.QMessageBox.Information)
-        info_box.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        try:
+            info_box = QtWidgets.QMessageBox.information(self.window, "Class Details", results, buttons=QtWidgets.QMessageBox.Ok)
+            info_box.exec_()
+        except Exception as err:
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
 
 
-        info_box.exec_()
-
-        
-
-
-        
-
-        
-
-
-
-
+    def display_ClassId_err(self, classId):
+        try:
+            QtWidgets.QMessageBox.critical(self.window, "Error", "no class with classId %s exists" % classId)
+        except Exception as err:
+            QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
