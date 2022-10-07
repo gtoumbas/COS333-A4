@@ -1,9 +1,9 @@
-from inspect import classify_class_attrs
 import sys
+import platform
 import socket
 import pickle 
 
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 class ClientWindow:
 
     def __init__(self, argv):
@@ -60,8 +60,18 @@ class ClientWindow:
 
         # Adding list widget
         self.listWidget = QtWidgets.QListWidget()
-        layout.addWidget(self.listWidget, 4, 0, 1, 3)
+        layout.addWidget(self.listWidget, 4, 0, 1, 3)   
+        # Display all results initially
+        self.submit_clicked()
         self.listWidget.itemDoubleClicked.connect(self.class_clicked)
+        #  Change to cmd+o for mac
+        if platform.system() == "Darwin":
+            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self.listWidget)
+        else:
+            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Return"), self.listWidget)
+        enterShortcut.setContext(QtCore.Qt.WidgetShortcut)
+        enterShortcut.activated.connect(lambda: self.class_clicked(self.listWidget.currentItem()))
+
 
         # deptLine, numberLine, areaLine, titleLine is where the 
         # inputs are instead of args and so self needs to be made
@@ -75,6 +85,10 @@ class ClientWindow:
         self.window.setCentralWidget(frame)
         self.window.show()
         sys.exit(self.app.exec_())
+
+    def test(self, test):
+        print("test")
+        print(test)
 
     def connectToServer(self):
         pass
@@ -100,7 +114,8 @@ class ClientWindow:
         ]
         inputs.insert(0, "SEARCH")
 
-        
+        # Clear list widget
+        self.listWidget.clear() 
 
         try:
             with socket.socket() as sock:
@@ -123,10 +138,14 @@ class ClientWindow:
     def display_search_results(self, results):
         for r in results:
             class_id, dept, number, area, title = r
-            self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
-            # self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
+            self.listWidget.addItem("%5s%4s%5s%4s %s" % r)
+
+        # Activate first item in list
+        self.listWidget.setCurrentRow(0)
 
     def class_clicked(self, item):
+        print("clicked")
+        print(type(item))
         # Classid is number before first space
         class_id = item.text().split()[0]
         print(class_id)
@@ -160,7 +179,7 @@ class ClientWindow:
         info_box.setStandardButtons(QtWidgets.QMessageBox.Ok)
 
 
-        sys.exit(info_box.exec_())
+        info_box.exec_()
 
         
 
