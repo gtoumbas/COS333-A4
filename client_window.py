@@ -10,8 +10,7 @@ class ClientWindow:
         self.host = argv[1]
         self.port = int(argv[2])
         self.app = QtWidgets.QApplication(argv)
-        self.window = QtWidgets.QMainWindow()
-    
+        self.window = QtWidgets.QMainWindow()    
 
 
     def create_window(self):
@@ -72,11 +71,6 @@ class ClientWindow:
         enterShortcut.setContext(QtCore.Qt.WidgetShortcut)
         enterShortcut.activated.connect(lambda: self.class_clicked(self.listWidget.currentItem()))
 
-
-        # deptLine, numberLine, areaLine, titleLine is where the 
-        # inputs are instead of args and so self needs to be made
-        # of those instead of args 
-
         frame.setLayout(layout)
 
         # Set size of window to a quarter of the screen
@@ -86,9 +80,6 @@ class ClientWindow:
         self.window.show()
         sys.exit(self.app.exec_())
 
-    def test(self, test):
-        print("test")
-        print(test)
 
     def connectToServer(self):
         pass
@@ -132,7 +123,6 @@ class ClientWindow:
 
         except Exception as ex:
             print(ex, file=sys.stderr)
-            sys.exit(1)
         
 
     def display_search_results(self, results):
@@ -140,8 +130,13 @@ class ClientWindow:
             for r in results:
                 class_id, dept, number, area, title = r
                 self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
+                self.listWidget.setCurrentRow(0)
         except Exception as err:
             QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
+
+        # Activate the first item in the list
+
+
 
 
     def class_clicked(self, item):
@@ -165,6 +160,7 @@ class ClientWindow:
                 results = pickle.load(in_flo)
                 if results[0] == "InavlidClassId":
                     self.display_ClassId_err(class_id)
+                    return
                 
                 self.display_class_details(results)
                 
@@ -175,8 +171,13 @@ class ClientWindow:
 
     def display_class_details(self, results):
         try:
-            info_box = QtWidgets.QMessageBox.information(self.window, "Class Details", results, buttons=QtWidgets.QMessageBox.Ok)
-            info_box.exec_()
+            info_box = QtWidgets.QMessageBox.information(
+                self.window, 
+                "Class Details", 
+                results, 
+                buttons=QtWidgets.QMessageBox.Ok,
+                defaultButton=QtWidgets.QMessageBox.Ok
+                )
         except Exception as err:
             QtWidgets.QMessageBox.critical(self.window, "Server Error", str(err))
 

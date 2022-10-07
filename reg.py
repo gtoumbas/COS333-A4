@@ -25,7 +25,6 @@ def main():
     try:
         cw = ClientWindow(sys.argv)
         cw.create_window()
-        print("hello")
 
     except Exception as ex:
         print(ex, file=sys.stderr)
