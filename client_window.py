@@ -143,7 +143,7 @@ class ClientWindow:
         for r in results:
             class_id, dept, number, area, title = r
             self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
-            self.listWidget.setCurrentRow(0)
+        self.listWidget.setCurrentRow(0)
 
 
     def class_clicked(self, item):

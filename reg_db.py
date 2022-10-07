@@ -41,21 +41,28 @@ class RegDB:
     # FIXME REMBER TO CHANGE DB CONNECTION
 
     def __init__(self):
+        self.connected = False
+        pass
 
+    def connect(self):
         try:
             self.conn = sqlite3.connect(
                 self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
+            self.connected = True
 
         except Exception as error:
             sys.stderr.write(f"{sys.argv[0]}: {error}")
             sys.exit(1)
 
+
     def close(self):
         """
         Closes the connection to the database.
         """
-        self.conn.close()
+        if self.connected:
+            self.conn.close()
+            self.connected = False
 
     def search(self, inputs):
         """
@@ -64,6 +71,9 @@ class RegDB:
         Inputs:
             Inputs from textbox entries 
         """
+        if not self.connected:
+            sys.stderr.write("Error: Not connected to database")
+            sys.exit(1)
         self.format_inputs(inputs)
         query = self.get_search_query(inputs)
         # Parameters set to fill in prepared statements
@@ -87,6 +97,9 @@ class RegDB:
         Args:
             args (argparse.Namespace): Arguments from command line
         """
+        if not self.connected:
+            sys.stderr.write("Error: Not connected to database")
+            sys.exit(1)
         if not str(class_id).isdigit():
             sys.stderr.write("Error: Class ID must be a number")
             sys.exit(1)

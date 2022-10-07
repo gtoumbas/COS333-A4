@@ -12,6 +12,7 @@ from reg_db import RegDB
 
 def handleClient(sock, db):
     in_flo = sock.makefile(mode="rb")
+    db.connect() # Opens connection to db 
     
     inputs = pickle.load(in_flo)
     if inputs[0] == "SEARCH":
@@ -25,6 +26,8 @@ def handleClient(sock, db):
         out_flo = sock.makefile(mode="wb")
         pickle.dump(results, out_flo)
         out_flo.flush()
+
+    db.close()
 
 
 
