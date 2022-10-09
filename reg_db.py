@@ -40,6 +40,8 @@ class RegDB:
 
     def __init__(self):
         self.connected = False
+        self.conn = None
+        self.cur = None
 
     def connect(self):
         try:
