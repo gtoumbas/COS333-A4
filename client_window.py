@@ -159,8 +159,8 @@ class ClientWindow:
         for currresult in results:
             class_id, dept, number, area, title = currresult
             self.list_widget.addItem(
-                f"{class_id:>5} {dept:>3}\
-                     {number:>4} {area:>3} {title}")
+                f"{class_id:>5} {dept:>3}" +
+                 f" {number:>4} {area:>3} {title}")
         self.list_widget.setCurrentRow(0) # Set focus on first item
 
 
