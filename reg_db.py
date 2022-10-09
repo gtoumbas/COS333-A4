@@ -75,8 +75,7 @@ class RegDB:
 
         form_inputs = self.format_inputs(inputs)
         query = self.get_search_query(form_inputs)
-        # print(query)
-        #jParameters set to fill in prepared statements
+        #Parameters set to fill in prepared statements
         parameters = [x for x in form_inputs if x]
         try:
             results = self.cur.execute(query, parameters).fetchall()
