@@ -4,7 +4,6 @@ Authors: George Toumbas, Shanzay Waseem
 Contains the class RegDB, which can search and
 display information from the registrar database.
 """
-from re import A
 import sqlite3
 import textwrap
 import sys
@@ -54,7 +53,6 @@ class RegDB:
             print(f"{sys.argv[0]}: {error}", file=sys.stderr)
             return error
 
-
     def close(self):
         """
         Closes the connection to the database.
@@ -68,7 +66,7 @@ class RegDB:
         Searches the database and displays the results.
 
         Inputs:
-            Inputs from textbox entries 
+            Inputs from textbox entries
         """
         if not self.connected:
             sys.stderr.write("Error: Not connected to database")
@@ -98,7 +96,8 @@ class RegDB:
             print("Error: Not connected to database", file=sys.stderr)
             return ["ERROR", class_id]
         if not str(class_id).isdigit():
-            print(f"Error: Invalid class ID: {class_id}", file=sys.stderr)
+            print(f"Error: Invalid class ID: {class_id}",
+            file=sys.stderr)
             return ["INVALID_CLASSID", class_id]
 
         query = self.get_details_query()
@@ -113,7 +112,8 @@ class RegDB:
             return ["ERROR", class_id]
 
         if len(results) == 0:
-            print(f"Error: Class ID: {class_id} not found", file=sys.stderr)
+            print(f"Error: Class ID: {class_id} not found",
+            file=sys.stderr)
             return ["INVALID_CLASSID", class_id]
 
         details = self.display_details(results)
@@ -129,7 +129,7 @@ class RegDB:
         Returns:
             query (str): SQL query
         """
-        dept = inputs[0] 
+        dept = inputs[0]
         num = inputs[1]
         area = inputs[2]
         title = inputs[3]
@@ -322,5 +322,3 @@ class RegDB:
                 formatted_inputs.append("")
 
         return formatted_inputs
-
-        

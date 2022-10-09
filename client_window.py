@@ -70,7 +70,8 @@ class ClientWindow:
         # Submit button
         submit_btton = QtWidgets.QPushButton("Submit")
         layout.addWidget(submit_btton, 0, 2, 4, 1)
-        submit_btton.clicked.connect(lambda: self.submit_clicked(text_fields))
+        submit_btton.clicked.connect(
+            lambda: self.submit_clicked(text_fields))
 
         # Adding list widget
         layout.addWidget(self.list_widget, 4, 0, 1, 3)

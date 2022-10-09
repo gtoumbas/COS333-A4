@@ -7,7 +7,7 @@ Contributions:
 
 George: 
 
-I edited reg_db.py ito change how the inputs were being received as they are no longer command-line arguments. I also edited how the data was being returned. I was responsible for creating the sockets and their transfers, ensuring that all the sockets and connections were transient.  In addition, I created the window for reg_details with display_class_details(), matching it the reference given. Using the code from class, I wrote regserver.py. Furthermore, I wrote a python script which reads arguments from a txt file and compares the outputs of our program with the outputs of the reference .pyc files. Using this program, I tested regdetails.py on every entry classid and tested reg.py against all example args on the assignment page + some additional args.  
+I edited reg_db.py ito change how the inputs were being received as they are no longer command-line arguments. I also edited how the data was being returned. I was responsible for creating the sockets and their transfers, ensuring that all the sockets and connections were transient.  In addition, I created the window for reg_details with display_class_details(), matching it the reference given. Using the code from class, I wrote regserver.py. I also spent my time working on making the GUI work with the keys on the keyboard, so that no touchpad/mouse needs to be used. Once the code was written, I spent my time debugging the code by testing all the different cases, both boundary and statement testing. 
 
 
 Shanzay: 
