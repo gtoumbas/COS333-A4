@@ -12,6 +12,7 @@ class ClientWindow:
         self.port = int(argv[2])
         self.app = QtWidgets.QApplication(argv)
         self.window = QtWidgets.QMainWindow()
+        self.list_widget = QtWidgets.QListWidget()
 
 
     def create_window(self):
@@ -23,44 +24,55 @@ class ClientWindow:
 
         # Dept label and text
         dept_label = QtWidgets.QLabel("Dept:")
-        self.dept_line = QtWidgets.QLineEdit("")
-        self.dept_line.returnPressed.connect(self.submit_clicked(inputs))
+        dept_line = QtWidgets.QLineEdit("")
         layout.addWidget(dept_label, 0, 0)
-        layout.addWidget(self.dept_line, 0, 1)
+        layout.addWidget(dept_line, 0, 1)
 
         # Number label and text
         number_label = QtWidgets.QLabel("Number:")
-        self.number_line = QtWidgets.QLineEdit("")
-        self.number_line.returnPressed.connect(self.submit_clicked(inputs))
+        number_line = QtWidgets.QLineEdit("")
         layout.addWidget(number_label, 1, 0)
-        layout.addWidget(self.number_line, 1, 1)
+        layout.addWidget(number_line, 1, 1)
 
         # Area label and text
         area_label = QtWidgets.QLabel("Area:")
-        self.area_line = QtWidgets.QLineEdit("")
-        self.area_line.returnPressed.connect(self.submit_clicked(inputs))
+        area_line = QtWidgets.QLineEdit("")
         layout.addWidget(area_label, 2, 0)
-        layout.addWidget(self.area_line, 2, 1)
+        layout.addWidget(area_line, 2, 1)
 
         # Title label and text
         title_label = QtWidgets.QLabel("Title:")
-        self.title_line = QtWidgets.QLineEdit("")
-        self.title_line.returnPressed.connect(self.submit_clicked(inputs))
+        title_line = QtWidgets.QLineEdit("")
         layout.addWidget(title_label, 3, 0)
-        layout.addWidget(self.title_line, 3, 1)
+        layout.addWidget(title_line, 3, 1)
 
         layout.setRowStretch(0, 0)
         layout.setRowStretch(1, 1)
         layout.setRowStretch(2, 0)
         layout.setRowStretch(3, 0)
 
+        text_fields = [
+            dept_line,
+            number_line,
+            area_line,
+            title_line
+        ]
+
+        dept_line.returnPressed.connect(
+            lambda: self.submit_clicked(text_fields))
+        number_line.returnPressed.connect(
+            lambda: self.submit_clicked(text_fields))
+        area_line.returnPressed.connect(
+            lambda: self.submit_clicked(text_fields))
+        title_line.returnPressed.connect(
+            lambda: self.submit_clicked(text_fields))
+
         # Submit button
-        self.submit_btton = QtWidgets.QPushButton("Submit")
-        layout.addWidget(self.submit_btton, 0, 2, 4, 1)
-        self.submit_btton.clicked.connect(self.submit_clicked)
+        submit_btton = QtWidgets.QPushButton("Submit")
+        layout.addWidget(submit_btton, 0, 2, 4, 1)
+        submit_btton.clicked.connect(lambda: self.submit_clicked(text_fields))
 
         # Adding list widget
-        self.list_widget = QtWidgets.QListWidget()
         layout.addWidget(self.list_widget, 4, 0, 1, 3)
         self.list_widget.itemDoubleClicked.connect(self.class_clicked)
         #  Get details from enter key or from cmd+o(mac)
@@ -84,7 +96,7 @@ class ClientWindow:
         self.window.show()
 
         # Display all results initially
-        self.submit_clicked()
+        self.submit_clicked(text_fields)
 
 
         sys.exit(self.app.exec_())
@@ -133,11 +145,12 @@ class ClientWindow:
 
     # submit clicked is for when you are grabbing the queries
     def submit_clicked(self, inputs):
-        inputs.insert(0, "SEARCH")
+        request = [i.text() for i in inputs]
+        request.insert(0, "SEARCH")
 
         # Clear list widget
         self.list_widget.clear()
-        response = self.send_request(inputs)
+        response = self.send_request(request)
         if response:
             self.display_search_results(response)
 
