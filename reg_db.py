@@ -39,11 +39,8 @@ class RegDB:
 
     DB_URL = 'file:reg.sqlite?mode=ro'
 
-    # FIXME REMBER TO CHANGE DB CONNECTION
-
     def __init__(self):
         self.connected = False
-        pass
 
     def connect(self):
         try:
@@ -54,7 +51,7 @@ class RegDB:
             return None
 
         except Exception as error:
-            sys.stderr.write(f"{sys.argv[0]}: {error}")
+            print(f"{sys.argv[0]}: {error}", file=sys.stderr)
             return error
 
 
@@ -76,22 +73,20 @@ class RegDB:
         if not self.connected:
             sys.stderr.write("Error: Not connected to database")
 
-        self.format_inputs(inputs)
-        query = self.get_search_query(inputs)
-        # Parameters set to fill in prepared statements
-        parameters = [x for x in inputs if x]
+        form_inputs = self.format_inputs(inputs)
+        query = self.get_search_query(form_inputs)
+        # print(query)
+        #jParameters set to fill in prepared statements
+        parameters = [x for x in form_inputs if x]
         try:
             results = self.cur.execute(query, parameters).fetchall()
         # Error if the query is unsuccessful
         except Exception as error:
-            sys.stderr.write(f"{sys.argv[0]}: {error}")
+            print(f"{sys.argv[0]}: {error}", file=sys.stderr)
             return ["ERROR", inputs]
-    
+
         return results
 
-        # self.display_table(results)
-
-    # TODO: how to get classID?
     def get_details(self, class_id):
         """
         Searches the database for a single class and
@@ -101,11 +96,11 @@ class RegDB:
             args (argparse.Namespace): Arguments from command line
         """
         if not self.connected:
-            sys.stderr.write("Error: Not connected to database")
-            sys.exit(1)
+            print("Error: Not connected to database", file=sys.stderr)
+            return ["ERROR", class_id]
         if not str(class_id).isdigit():
-            sys.stderr.write("Error: Class ID must be a number")
-            sys.exit(1)
+            print("Error: Invalid class ID", file=sys.stderr)
+            return ["INVALID_CLASSID", class_id]
 
         query = self.get_details_query()
         # Parameters set to fill in prepared statements
@@ -115,16 +110,15 @@ class RegDB:
             results = self.cur.execute(query, parameters).fetchall()
         # Error if the query is unsuccessful
         except Exception as error:
-            sys.stderr.write(f"{sys.argv[0]}: {error}")
+            print(f"{sys.argv[0]}: {error}", file=sys.stderr)
             return ["ERROR", class_id]
 
         if len(results) == 0:
-            sys.stderr.write(f"No class with classid {class_id} exists")
+            print(f"Error: Class ID: {class_id} not found", file=sys.stderr)
             return ["INVALID_CLASSID", class_id]
 
         details = self.display_details(results)
         return details
-
 
     def get_search_query(self, inputs):
         """
@@ -136,7 +130,7 @@ class RegDB:
         Returns:
             query (str): SQL query
         """
-        dept = inputs[0]
+        dept = inputs[0] 
         num = inputs[1]
         area = inputs[2]
         title = inputs[3]
@@ -158,6 +152,7 @@ class RegDB:
             where += "area LIKE ? escape '@' AND "
         if title:
             where += "title LIKE ? escape '@' AND "
+
 
         # Remove last AND
         if where != "WHERE ":
@@ -324,5 +319,9 @@ class RegDB:
                 inp = inp.replace("\n", "")
                 inp = f"%{inp}%"
                 formatted_inputs.append(inp)
+            else:
+                formatted_inputs.append("")
+
+        return formatted_inputs
 
         

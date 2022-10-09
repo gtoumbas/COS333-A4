@@ -54,8 +54,22 @@ class ClientWindow:
         layout.setRowStretch(2, 0)
         layout.setRowStretch(3, 0)
 
+        # Submit button 
         self.submit_btton = QtWidgets.QPushButton("Submit")
         layout.addWidget(self.submit_btton, 0, 2, 4, 1)
+        self.submit_btton.clicked.connect(self.submit_clicked)  
+
+        # Adding list widget
+        self.listWidget = QtWidgets.QListWidget()
+        layout.addWidget(self.listWidget, 4, 0, 1, 3) 
+        self.listWidget.itemDoubleClicked.connect(self.class_clicked)
+        #  Get details from enter key or from cmd+o(mac) 
+        if platform.system() == "Darwin":
+            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self.listWidget)
+        else:
+            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Return"), self.listWidget)
+        enterShortcut.setContext(QtCore.Qt.WidgetShortcut)
+        enterShortcut.activated.connect(lambda: self.class_clicked(self.listWidget.currentItem()))
 
         frame.setLayout(layout)
 
@@ -65,24 +79,9 @@ class ClientWindow:
         self.window.setCentralWidget(frame)
         self.window.show()
         
-
-        # Adding list widget
-        self.listWidget = QtWidgets.QListWidget()
-        layout.addWidget(self.listWidget, 4, 0, 1, 3) 
-
-        self.submit_btton.clicked.connect(self.submit_clicked)  
-        
         # Display all results initially
         self.submit_clicked()
-        self.listWidget.itemDoubleClicked.connect(self.class_clicked)
 
-        #  Get details from enter key or from cmd+o(mac) 
-        if platform.system() == "Darwin":
-            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self.listWidget)
-        else:
-            enterShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Return"), self.listWidget)
-        enterShortcut.setContext(QtCore.Qt.WidgetShortcut)
-        enterShortcut.activated.connect(lambda: self.class_clicked(self.listWidget.currentItem()))
 
         sys.exit(self.app.exec_())
 
@@ -100,6 +99,7 @@ class ClientWindow:
                 response_ok = self.check_response(response)
                 if not response_ok:
                     return None
+            
                 return response
             
         except Exception as ex:
@@ -145,15 +145,13 @@ class ClientWindow:
         for r in results:
             class_id, dept, number, area, title = r
             self.listWidget.addItem(f"{class_id:>5} {dept:>3} {number:>4} {area:>3} {title}")
-        self.listWidget.setCurrentRow(0)
+        self.listWidget.setCurrentRow(0) # Set focus on first item
 
 
     def class_clicked(self, item):
         # Classid is number before first space
         class_id = item.text().split()[0]
         inputs = ["DETAILS", class_id]
-
-
 
         # Send request to server
         response = self.send_request(inputs)

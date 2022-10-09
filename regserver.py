@@ -9,14 +9,13 @@ import pickle
 
 from reg_db import RegDB
 
-
+# TODO add newlines to beginning of all error printing
 def handleClient(sock, db):
     in_flo = sock.makefile(mode="rb")
     err = db.connect() # Opens connection to db 
 
     # Double check this. Might be writing to stderr twice
     if err:
-        sys.stderr.write(f"{sys.argv[0]}: {err}")
         response = ["ERROR"]
         out_flo = sock.makefile(mode="wb")
         pickle.dump(response, out_flo)
