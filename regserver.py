@@ -73,6 +73,7 @@ def main():
                     print('Server IP addr and po ', sock.getsockname())
                     print('Client IP addr and po ', client_addr)
                     handleClient(sock, db)
+                print('Closed socket')
             except Exception as ex:
                 print(ex, file=sys.stderr)
     

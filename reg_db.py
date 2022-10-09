@@ -98,7 +98,7 @@ class RegDB:
             print("Error: Not connected to database", file=sys.stderr)
             return ["ERROR", class_id]
         if not str(class_id).isdigit():
-            print("Error: Invalid class ID", file=sys.stderr)
+            print(f"Error: Invalid class ID: {class_id}", file=sys.stderr)
             return ["INVALID_CLASSID", class_id]
 
         query = self.get_details_query()
