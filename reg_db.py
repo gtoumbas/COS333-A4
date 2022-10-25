@@ -86,7 +86,7 @@ class RegDB:
 
         return results
 
-    def get_details(self, class_id):
+    def get_details(self, class_id, as_string=True):
         """
         Searches the database for a single class and
         displays the results.
@@ -118,8 +118,10 @@ class RegDB:
             file=sys.stderr)
             return ["INVALID_CLASSID", class_id]
 
-        details = self.display_details(results)
-        return details
+        if as_string: 
+            return self.display_details(results)
+             
+        return results
 
     def get_search_query(self, inputs):
         """
