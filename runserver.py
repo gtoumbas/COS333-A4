@@ -67,6 +67,10 @@ def details():
         results = db.get_details(class_id, as_string=False)
         db.close()
 
+        for item in results:
+            for i in item:
+                print(i)
+
         # turning results into a dict
         course_results = {}
         first_result = results[0]
@@ -83,13 +87,14 @@ def details():
         course_results["class_id"] = class_id
 
         course_results.setdefault("dept_num", [])
+        course_results.setdefault("profs", [])
         for items in results:
             course_results["dept_num"].append(items[6] + " " + items[7])
-        
-        course_results.setdefault("profs", [])
-        for professors in first_result[12:]:
-            course_results["profs"].append(professors)
+            course_results["profs"].append(items[12])
 
+        course_results["dept_num"] = set(course_results["dept_num"])
+        course_results["profs"] = set(course_results["profs"])
+        
         return render_template('reg_details.html', course=course_results)
 
 

@@ -1,28 +1,29 @@
 gtoumbas_swaseem
 
-George Toumbas, Shanzay Waseem, Assignment 2
+George Toumbas, Shanzay Waseem, Assignment 3
 
 
 Contributions:
 
 George: 
 
-I edited reg_db.py ito change how the inputs were being received as they are no longer command-line arguments. I also edited how the data was being returned. I was responsible for creating the sockets and their transfers, ensuring that all the sockets and connections were transient.  In addition, I created the window for reg_details with display_class_details(), matching it the reference given. Using the code from class, I wrote regserver.py. I also spent my time working on making the GUI work with the keys on the keyboard, so that no touchpad/mouse needs to be used. Once the code was written, I spent my time debugging the code by testing all the different cases, both boundary and statement testing. 
+I wrote runserver.py in order to first created two get methods, one for the home page and the other for the details page. I added flask to the code to get the site running. I then designed the look of the website by writing the reg_search.html template and writing some of the reg_details.html template to display the details window. I debugged the code through boundary and statement testing. 
 
 
 Shanzay: 
 
-I wrote reg.py, focusing on the execution with -h as a command line argument. I then worked on creating the window display for 'Princeton University Class Search' with ClientWindow. As now the inputs came from the textboxes when the submit button was clicked, I was responsible for making the submit button work and ensuring the data was being transferred to regserver.py. In addition, I worked on display_search_results, to make the returned data look in the ListWidget just as it did in the example. Once our code was completed, I handled the pylint checking and the readme file.
+I edited runserver.py to take the results from the details query and convert the list into a dict. I then edited the reg_details.html template to include the hyperlink movements between pages, to properly save the information that is being input and fix the style of the page as a whole to match the reference. I then added the cookies to keep the search entries in their boxes. I debugged the code through boundary and statement testing.
 
 Outside Help:
 Just python online documentation.
 
 Sources of Information: 
 https://docs.python.org/3/howto/argparse.html --> this is where we got the information for argparse
+https://stackoverflow.com/questions/57361403/pure-html-back-button --> this is where we got the information for the 'another class search' button
 
-Time Spent: ~17 hours
+
+Time Spent: ~10 hours
 
 Assesment of Assignment:
 
-I thoroughly enjoyed this assignment as a very stark contrast to the learnings I took away from the first one. As both my partner and I have no background with GUI, and in particular with PyQt5, we learnt a lot about the front-end of web applications and the difficulty, but also importance, of creating a user-friendly design. We also learnt the different manners to visualize data and interact with users through an interface, and find these teachings particularly useful for our 333 project and other future projects. A suggestion for improvement would be to perhaps provide the information for the exact specifications of the exampler windows in terms of font for the text, the look in itself, etc. Much of the design was guess work and just from looking, seeing if there was a difference in our window and the example one.  
-
+I thoroughly enjoyed this assignment as it was a great stepping stone from the preivous assignment and the skills I learnt I also simultaneously used when designing the landing page for my COS333 project. By working with flask myself and understanding how to connect Python with HTML, I was able to better and more quickly code the page for my project. The only part that was a little bit difficult was getting the cookies working; however, that was a good challenge as it is something I plan to use for my project's website and hence it was useful to learn early on. A suggestion for improvement would be to explain how much of the design needs to match the example, for instance I was not sure if my details title being lower on the page than the example one would affect our grade. 
