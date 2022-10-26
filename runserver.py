@@ -24,7 +24,6 @@ app = Flask(__name__)
 db = RegDB()
 
 
-
 def main():
     parser = argparse.ArgumentParser(description='Client for the registrar application')
     parser.add_argument('port', metavar='port', type=int, help='the port at which the server is listening')
@@ -67,8 +66,31 @@ def details():
         # multiple teacher 
         results = db.get_details(class_id, as_string=False)
         db.close()
-        print(results)
-        return render_template('reg_details.html', course=results)
+
+        # turning results into a dict
+        course_results = {}
+        first_result = results[0]
+        course_results["course_id"] = first_result[0]
+        course_results["days"] = first_result[1]
+        course_results["start_time"] = first_result[2]
+        course_results["end_time"] = first_result[3]
+        course_results["building"] = first_result[4]
+        course_results["room"] = first_result[5]
+        course_results["area"] = first_result[8]
+        course_results["title"] = first_result[9]
+        course_results["description"] = first_result[10]
+        course_results["prereqs"] = first_result[11]
+        course_results["class_id"] = class_id
+
+        course_results.setdefault("dept_num", [])
+        for items in results:
+            course_results["dept_num"].append(items[6] + " " + items[7])
+        
+        course_results.setdefault("profs", [])
+        for professors in first_result[12:]:
+            course_results["profs"].append(professors)
+
+        return render_template('reg_details.html', course=course_results)
 
 
 if __name__ == '__main__':

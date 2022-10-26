@@ -120,7 +120,7 @@ class RegDB:
 
         if as_string: 
             return self.display_details(results)
-             
+
         return results
 
     def get_search_query(self, inputs):
