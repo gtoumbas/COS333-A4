@@ -118,7 +118,7 @@ class RegDB:
             file=sys.stderr)
             return ["INVALID_CLASSID", class_id]
 
-        if as_string: 
+        if as_string:
             return self.display_details(results)
 
         return results
