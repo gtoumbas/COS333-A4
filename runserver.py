@@ -3,7 +3,7 @@ Authors: Shanzay Waseem, George Toumbas
 
 """
 import argparse
-from flask import Flask, render_template, request, json, make_response
+from flask import Flask, render_template, request, make_response
 from reg_db import RegDB
 
 app = Flask(__name__, template_folder='.')
