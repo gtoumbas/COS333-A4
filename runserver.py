@@ -39,8 +39,12 @@ def home():
             results = db.search(params)
             db.close()
         except:
-            error_message = "A server error occurred. Please contact the system administrator."
-            return render_template('error.html', error_message=error_message)
+            error_message = "A server error occurred. " + \
+            "Please contact the system administrator."
+            return render_template(
+                'error.html',
+                error_message=error_message
+            )
 
         set_currentinputs = None
         inputs = {"dept": dept or '', "num":num or '', \
@@ -86,29 +90,41 @@ def details():
         # Handle missing class_id
         if not class_id:
             error_message = "missing classid"
-            return render_template('error.html', error_message=error_message)
+            return render_template(
+                'error.html',
+                error_message=error_message
+            )
 
         # Handle non-integer class_id
         for char in class_id:
             if not char.isdigit():
                 error_message = "non-integer classid"
-                return render_template('error.html', error_message=error_message)
+                return render_template(
+                    'error.html',
+                    error_message=error_message
+                )
 
-
-        # Handles DB errors        
+        # Handles DB errors
         try:
             db.connect()
             results = db.get_details(class_id, as_string=False)
             db.close()
-        except: 
-            error_message = "A server error occurred. Please contact the system administrator."
-            return render_template('error.html', error_message=error_message)
+        except:
+            error_message = "A server error occurred. " + \
+            "Please contact the system administrator."
+            return render_template(
+                'error.html',
+                error_message=error_message
+            )
 
 
         # Handles invalid class id
         if results[0]== "INVALID_CLASSID":
             error_message = f"no class with classid {class_id} exists"
-            return render_template('error.html', error_message=error_message)
+            return render_template(
+                'error.html',
+                error_message=error_message
+            )
 
         # turning results into a dict
         course_results = {}
