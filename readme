@@ -7,7 +7,7 @@ Contributions:
 
 George: 
 
-I wrote runserver.py in order to first created two get methods, one for the home page and the other for the details page. I added flask to the code to get the site running. I then designed the look of the website by writing the reg_search.html template and writing some of the reg_details.html template to display the details window. I debugged the code through boundary and statement testing. 
+I wrote runserver.py in order to first created two get methods, one for the home page and the other for the details page. I added flask to the code to get the site running. I then designed the look of the website by writing the reg_search.html template and writing some of the reg_details.html template to display the details window. I debugged the code through boundary and statement testing. I also added error handling.
 
 
 Shanzay: 

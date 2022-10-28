@@ -1,26 +1,12 @@
+"""
+Authors: Shanzay Waseem, George Toumbas
+
+"""
 import argparse
 from flask import Flask, render_template, request, json, make_response
 from reg_db import RegDB
-# Flask home route
-# test json data of classes with dept, number, area, title
-test_dict = [
-        {
-            "id": "1234",
-            "dept": "CS",
-            "num": "111",
-            "area": "A",
-            "title": "Intro to Computer Science"
-        },
-        {
-            "id": "12214",
-            "dept": "CS",
-            "num": "112",
-            "area": "A",
-            "title": "Intro to Computer Science II"
-        },
-    ]
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 db = RegDB()
 
 
@@ -33,8 +19,7 @@ def main():
     args = parser.parse_args()
 
     # Start flask server
-    app.run(debug=True, port=args.port)
-    # app.run(port=args.port, debug=True)
+    app.run(port=args.port)
 
 
 @app.route('/', methods=['GET'])
@@ -47,9 +32,15 @@ def home():
         title = request.args.get('title')
 
         params = [dept, num, area, title]
-        db.connect()
-        results = db.search(params)
-        db.close()
+
+        # Handle db error
+        try:
+            db.connect()
+            results = db.search(params)
+            db.close()
+        except:
+            error_message = "A server error occurred. Please contact the system administrator."
+            return render_template('error.html', error_message=error_message)
 
         set_currentinputs = None
         inputs = {"dept": dept or '', "num":num or '', \
@@ -91,13 +82,33 @@ def set_newcookies(response, inputs):
 def details():
     if request.method == 'GET':
         class_id = request.args.get('classid')
-        db.connect()
-        results = db.get_details(class_id, as_string=False)
-        db.close()
 
-        for item in results:
-            for i in item:
-                print(i)
+        # Handle missing class_id
+        if not class_id:
+            error_message = "missing classid"
+            return render_template('error.html', error_message=error_message)
+
+        # Handle non-integer class_id
+        for char in class_id:
+            if not char.isdigit():
+                error_message = "non-integer classid"
+                return render_template('error.html', error_message=error_message)
+
+
+        # Handles DB errors        
+        try:
+            db.connect()
+            results = db.get_details(class_id, as_string=False)
+            db.close()
+        except: 
+            error_message = "A server error occurred. Please contact the system administrator."
+            return render_template('error.html', error_message=error_message)
+
+
+        # Handles invalid class id
+        if results[0]== "INVALID_CLASSID":
+            error_message = f"no class with classid {class_id} exists"
+            return render_template('error.html', error_message=error_message)
 
         # turning results into a dict
         course_results = {}
@@ -116,6 +127,7 @@ def details():
 
         course_results.setdefault("dept_num", [])
         course_results.setdefault("profs", [])
+
         for items in results:
             course_results["dept_num"].append(items[6] + " " + items[7])
             course_results["profs"].append(items[12])
