@@ -19,7 +19,7 @@ def main():
     args = parser.parse_args()
 
     # Start flask server
-    app.run(port=args.port)
+    app.run(host="0.0.0.0", port=args.port)
 
 
 @app.route('/', methods=['GET'])
