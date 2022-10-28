@@ -151,6 +151,11 @@ def details():
         course_results["dept_num"] = set(course_results["dept_num"])
         course_results["profs"] = set(course_results["profs"])
 
+        # Sort the dept_num and profs by alphabetical order
+        course_results["dept_num"] = sorted(course_results["dept_num"])
+        course_results["profs"] = sorted(course_results["profs"])
+
+
         return render_template('reg_details.html', \
             course=course_results)
 
