@@ -7,12 +7,16 @@ Contributions:
 
 George: 
 
-I wrote runserver.py in order to first created two get methods, one for the home page and the other for the details page. I added flask to the code to get the site running. I then designed the look of the website by writing the reg_search.html template and writing some of the reg_details.html template to display the details window. I debugged the code through boundary and statement testing. I also added error handling.
+While a majority of the code was adapted from Assignment 3, I wrote the new reg_search.html using 
+bootstrap and worked on making the reg_details page open up on a new browser tab. I also wrote the 
+JQuery portion of the assignment. 
 
 
 Shanzay: 
 
-I edited runserver.py to take the results from the details query and convert the list into a dict. I then edited the reg_details.html template to include the hyperlink movements between pages, to properly save the information that is being input and fix the style of the page as a whole to match the reference. I then added the cookies to keep the search entries in their boxes. I debugged the code through boundary and statement testing.
+I edited runserver.py and fixed the case of -h. With that, I designed the reg_details.html and 
+error.html. Our keystrokes search was not working correctly as it was lagging and not searching
+upon input removal, so I edited the JQuery portion.  
 
 Outside Help:
 Just python online documentation.
@@ -20,10 +24,13 @@ Just python online documentation.
 Sources of Information: 
 https://docs.python.org/3/howto/argparse.html --> this is where we got the information for argparse
 https://stackoverflow.com/questions/57361403/pure-html-back-button --> this is where we got the information for the 'another class search' button
+https://stackoverflow.com/questions/40701973/create-dynamically-html-div-jinja2-and-ajax --> Source for jinja implementation idea
 
 
-Time Spent: ~10 hours
+Time Spent: ~3 hours
 
 Assesment of Assignment:
 
-I thoroughly enjoyed this assignment as it was a great stepping stone from the preivous assignment and the skills I learnt I also simultaneously used when designing the landing page for my COS333 project. By working with flask myself and understanding how to connect Python with HTML, I was able to better and more quickly code the page for my project. The only part that was a little bit difficult was getting the cookies working; however, that was a good challenge as it is something I plan to use for my project's website and hence it was useful to learn early on. A suggestion for improvement would be to explain how much of the design needs to match the example, for instance I was not sure if my details title being lower on the page than the example one would affect our grade. 
+I thoroughly enjoyed this assignment as it increased my knowledge of bootstrap and css in addition to JQuery.
+This was very useful as I am currently working with bootstrap for the COS333 project and hence it helped me 
+increase my understanding in a simple and easy-to-do manner. 

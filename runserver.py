@@ -16,9 +16,9 @@ db = RegDB()
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Client for the registrar application')
+        description='The registrar application')
     parser.add_argument('port', metavar='port',type=int, \
-        help='the port at which the server is listening')
+        help='the port at which the server should listen')
 
     args = parser.parse_args()
 
