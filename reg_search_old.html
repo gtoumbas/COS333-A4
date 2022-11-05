@@ -1,0 +1,52 @@
+<h1>Registrar's Office</h1>
+<h2>Class Search</h2> 
+
+
+<!-- Form for flask -->
+<hr/>
+<form method="get">
+    <table>
+        <tr>
+            <td align = "right">Dept:</td>
+            <td align = "left"><input type="text" name="dept" value="{{dept}}"/></td>
+        </tr>
+        <tr>
+            <td align = "right">Number:</td>
+            <td align = "left"><input type="text" name="num" value="{{num}}"/></td>
+        </tr>
+        <tr>
+            <td align = "right">Area:</td>
+            <td align = "left"><input type="text" name="area" value="{{area}}"/></td>
+        </tr>
+        <tr>
+            <td align = "right">Title:</td>
+            <td align = "left"><input type="text" name="title" value="{{title}}"/></td>
+        </tr>
+        <tr>
+            <!-- Submit button aligned under input fields -->
+            <!-- Pad -->
+            <td></td>
+            <td align = "left"><input type="submit" value="Search" /></td>
+        </tr>
+    </table>
+<hr/>
+</form>
+<table>
+    <tr>
+        <th>ClassId</th>
+        <th>Dept</th>
+        <th>Num</th>
+        <th>Area</th>
+        <th align = "left">Title</th>
+    </tr>
+    {% for course in courses %}
+    <tr>
+        <td><a href="regdetails?classid={{ course[0] }}">{{ course[0] }}</a></td>
+        <td>{{ course[1]}}</td>
+        <td>{{ course[2]}}</td>
+        <td>{{ course[3]}}</td>
+        <td>{{ course[4]}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<hr/>

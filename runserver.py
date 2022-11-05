@@ -1,9 +1,13 @@
 """
-Authors: Shanzay Waseem, George Toumbas
+Authors: Shanzay Waseem, George Toumbas   
+
+Source for jinja implementation idea: 
+https://stackoverflow.com/questions/40701973/create-dynamically-html-div-jinja2-and-ajax
+
 
 """
 import argparse
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, jsonify
 from reg_db import RegDB
 
 app = Flask(__name__, template_folder='.')
@@ -21,11 +25,10 @@ def main():
     # Start flask server
     app.run(host="0.0.0.0", port=args.port)
 
-
-@app.route('/', methods=['GET'])
-def home():
+@app.route('/_get_search_results', methods=['GET'])
+def get_search_results():
     if request.method == 'GET':
-        # Check the form data
+    # Check the form data
         dept = request.args.get('dept')
         num = request.args.get('num')
         area = request.args.get('area')
@@ -39,26 +42,14 @@ def home():
             results = db.search(params)
             db.close()
         except:
-            error_message = "A server error occurred. " + \
-            "Please contact the system administrator."
-            return render_template(
-                'error.html',
-                error_message=error_message
-            )
+            print("DO SOMETHING") #FIXME 
 
-        set_currentinputs = None
-        inputs = {"dept": dept or '', "num":num or '', \
-            "area":area or '', "title":title or ''}
-        if any(inputs):
-            set_currentinputs = inputs
-        else:
-            set_currentinputs = get_prevcookies()
-        page = render_template('reg_search.html', \
-            courses=results, **set_currentinputs)
-        response = make_response(page)
-        set_newcookies(response, inputs)
+    json_html = jsonify(render_template('dynamic_results.html', courses=results))
+    return json_html
 
-        return response
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('reg_search.html') 
 
 
 def get_prevcookies():

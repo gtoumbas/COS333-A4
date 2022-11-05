@@ -1,52 +1,93 @@
-<h1>Registrar's Office</h1>
-<h2>Class Search</h2> 
+<!-- Bootstrap --> 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
+<!-- Custom css styel FIXME Colors on table rows seem inverted-->
+<!-- <link rel="stylesheet" href="custom.css"> -->
 
-<!-- Form for flask -->
-<hr/>
-<form method="get">
-    <table>
-        <tr>
-            <td align = "right">Dept:</td>
-            <td align = "left"><input type="text" name="dept" value="{{dept}}"/></td>
-        </tr>
-        <tr>
-            <td align = "right">Number:</td>
-            <td align = "left"><input type="text" name="num" value="{{num}}"/></td>
-        </tr>
-        <tr>
-            <td align = "right">Area:</td>
-            <td align = "left"><input type="text" name="area" value="{{area}}"/></td>
-        </tr>
-        <tr>
-            <td align = "right">Title:</td>
-            <td align = "left"><input type="text" name="title" value="{{title}}"/></td>
-        </tr>
-        <tr>
-            <!-- Submit button aligned under input fields -->
-            <!-- Pad -->
-            <td></td>
-            <td align = "left"><input type="submit" value="Search" /></td>
-        </tr>
+<!-- Header and Search Items -->
+<div class="container-fluid" style="background-color:#245276;">
+    <!-- White Header -->
+    <h1 style="text-align: center; color: white;">Registrar's Office: Class Search</h1>
+
+    <!-- Department, Number, Area, and Title Search Bars -->
+    <div class="row" style="padding: 10px; margin-bottom: 0px;">
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="dept" placeholder="Department">
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="num" placeholder="Number">
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="area" placeholder="Area">
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="title" placeholder="Title">
+        </div>
+    </div>
+</div>
+
+<!-- Results Area -->
+<div class="container-fluid">
+    <!-- Grey background -->
+    <table class="table table-striped w-auto" id="results">
+        <thead>
+            <tr>
+                <th>ClassId</th>
+                <th>Dept</th>
+                <th>Num</th>
+                <th>Area</th>
+                <!-- Title width extends to end -->
+                <th style="width: 100%;">Title</th>
+            </tr>
+        </thead>
+        <tbody id="results-body">
+        </tbody>
     </table>
-<hr/>
-</form>
-<table>
-    <tr>
-        <th>ClassId</th>
-        <th>Dept</th>
-        <th>Num</th>
-        <th>Area</th>
-        <th align = "left">Title</th>
-    </tr>
-    {% for course in courses %}
-    <tr>
-        <td><a href="regdetails?classid={{ course[0] }}">{{ course[0] }}</a></td>
-        <td>{{ course[1]}}</td>
-        <td>{{ course[2]}}</td>
-        <td>{{ course[3]}}</td>
-        <td>{{ course[4]}}</td>
-    </tr>
-    {% endfor %}
-</table>
-<hr/>
+</div>
+
+
+
+<!-- Jquery to Update Table AFter Keystrokes -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+// Function to update table
+function updateTable() {
+    // Get values from search bars
+    var dept = $('#dept').val();
+    var num = $('#num').val();
+    var area = $('#area').val();
+    var title = $('#title').val();
+
+    // Update table
+    $.ajax({
+        url: '_get_search_results',
+        type: 'GET',
+        data: {
+            dept: dept,
+            num: num,
+            area: area,
+            title: title
+        },
+        dataType: 'json',
+        success: function(data) {
+            // Update results-body with new data
+            // FIXME Need to handle errors  
+            $('#results-body').replaceWith(data);
+        }
+    });
+}
+// Update on document load
+$(document).ready(function() {
+    updateTable();
+});
+
+// Update table on keypress
+$('#dept').keypress(updateTable);
+$('#num').keypress(updateTable);
+$('#area').keypress(updateTable);
+$('#title').keypress(updateTable);
+</script> 
+
+
+
