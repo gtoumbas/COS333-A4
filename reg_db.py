@@ -49,11 +49,11 @@ class RegDB:
                 self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
             self.connected = True
-            return None
+            return True
 
         except Exception as error:
             print(f"{sys.argv[0]}: {error}", file=sys.stderr)
-            return
+            return False
 
     def close(self):
         """
@@ -72,6 +72,7 @@ class RegDB:
         """
         if not self.connected:
             sys.stderr.write("Error: Not connected to database")
+            return ["ERROR"]
 
         form_inputs = self.format_inputs(inputs)
         query = self.get_search_query(form_inputs)

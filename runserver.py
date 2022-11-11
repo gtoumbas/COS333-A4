@@ -37,14 +37,14 @@ def get_search_results():
         params = [dept, num, area, title]
 
         # Handle db error
-        try:
-            db.connect()
-            results = db.search(params)
-            db.close()
-        except:
+        connected = db.connect()
+        results = db.search(params)
+        if not connected or (results and results[0] == 'ERROR'):
             response = make_response()
             response.status_code = 500
             return response
+    
+        db.close()
 
 
     json_html = jsonify(render_template('dynamic_results.html', courses=results))
@@ -91,11 +91,8 @@ def details():
                 )
 
         # Handles DB errors
-        try:
-            db.connect()
-            results = db.get_details(class_id, as_string=False)
-            db.close()
-        except:
+        connected = db.connect()
+        if not connected:
             error_message = "A server error occurred. " + \
             "Please contact the system administrator."
             return render_template(
@@ -103,9 +100,13 @@ def details():
                 error_message=error_message
             )
 
+        # Get the results
+        results = db.details(class_id, as_string=False)
+        db.close()
+
 
         # Handles invalid class id
-        if results[0]== "INVALID_CLASSID":
+        if results[0]== "INVALID_CLASSID" or results[0] == "ERROR":
             error_message = f"no class with classid {class_id} exists"
             return render_template(
                 'error.html',
