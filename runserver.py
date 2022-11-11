@@ -39,13 +39,12 @@ def get_search_results():
         # Handle db error
         connected = db.connect()
         results = db.search(params)
+        db.close()
         if not connected or (results and results[0] == 'ERROR'):
             response = make_response()
             response.status_code = 500
-            db.close()
             return response
     
-        db.close()
 
 
         json_html = jsonify(render_template('dynamic_results.html', courses=results))
