@@ -1,0 +1,29 @@
+<h1>Registrar's Office</h1>
+<hr/>
+<h2>Class Details (class id {{ course.class_id}}) </h2> 
+<b>Course Id:</b> {{ course.course_id }} <br/>
+<b>Days:</b> {{ course.days }} <br/>
+<b>Start Time:</b> {{ course.start_time }} <br/>
+<b>End Time:</b> {{ course.end_time }} <br/>
+<b>Building:</b> {{ course.building }} <br/>
+<b>Room:</b> {{ course.room }} <br/>
+<hr/>
+<h2>Course Details (course id {{ course.course_id}}) </h2> 
+{% for dept_num in course.dept_num %}
+<b>Dept and Number:</b> {{ dept_num }} <br/>
+{% endfor %}
+<b>Area:</b> {{ course.area }} <br/>
+<b>Title:</b> {{ course.title }} <br/>
+<b>Description: </b> {{ course.description }} <br/>
+<b>Prerequisites:</b> {{ course.prereqs }} <br/>
+{%for prof in course.profs %}
+<b>Professor:</b> {{ prof }} <br/>
+{% endfor %}
+<hr/>
+<p>Click here to do <a href="javascript: history.go(-1)">another class search</a></p>
+<hr/>
+
+
+
+
+

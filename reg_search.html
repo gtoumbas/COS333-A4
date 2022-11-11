@@ -11,7 +11,7 @@
     <h1 style="text-align: center; color: white;">Registrar's Office: Class Search</h1>
 
     <!-- Department, Number, Area, and Title Search Bars -->
-    <div class="row" style="padding: 10px; margin-bottom: 0px;">
+    <div class="row" style="padding: 2px; margin-bottom: 0px;">
         <div class="col-sm-3">
             <input type="text" class="form-control" id="dept" placeholder="Department">
         </div>
@@ -25,6 +25,7 @@
             <input type="text" class="form-control" id="title" placeholder="Title">
         </div>
     </div>
+    <br>
 </div>
 
 <!-- Results Area -->
@@ -83,11 +84,9 @@ $(document).ready(function() {
 });
 
 // Update table on keypress
-$('#dept').keyup(updateTable);
-$('#num').keyup(updateTable);
-$('#area').keyup(updateTable);
-$('#title').keyup(updateTable);
+$('#dept').on('input', updateTable);
+$('#num').on('input', updateTable);
+$('#area').on('input', updateTable);
+$('#title').on('input', updateTable);
 </script> 
-
-
 
