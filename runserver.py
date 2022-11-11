@@ -42,17 +42,18 @@ def get_search_results():
         if not connected or (results and results[0] == 'ERROR'):
             response = make_response()
             response.status_code = 500
+            db.close()
             return response
     
         db.close()
 
 
-    json_html = jsonify(render_template('dynamic_results.html', courses=results))
-    response = make_response(json_html)
+        json_html = jsonify(render_template('dynamic_results.html', courses=results))
+        response = make_response(json_html)
 
-    # Set status code
-    response.status_code = 200
-    return response
+        # Set status code
+        response.status_code = 200
+        return response
 
 @app.route('/server-error')
 def server_error():
@@ -101,7 +102,7 @@ def details():
             )
 
         # Get the results
-        results = db.details(class_id, as_string=False)
+        results = db.get_details(class_id, as_string=False)
         db.close()
 
 
