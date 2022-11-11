@@ -81,15 +81,25 @@ function updateTable() {
         }
     });
 }
+
+var searchTimeout = null;
+
+// Prevents spamming of database 
+function delayInput(){
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function() {
+        updateTable();
+    }, 200);
+}
 // Update on document load
 $(document).ready(function() {
     updateTable();
 });
 
 // Update table on keypress
-$('#dept').on('input', updateTable);
-$('#num').on('input', updateTable);
-$('#area').on('input', updateTable);
-$('#title').on('input', updateTable);
+$('#dept').on('input', delayInput);
+$('#num').on('input', delayInput);
+$('#area').on('input', delayInput);
+$('#title').on('input', delayInput);
 </script> 
 

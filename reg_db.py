@@ -46,7 +46,7 @@ class RegDB:
     def connect(self):
         try:
             self.conn = sqlite3.connect(
-                self.DB_URL, isolation_level=None, uri=True, check_same_thread=False)
+                self.DB_URL, isolation_level=None, uri=True)
             self.cur = self.conn.cursor()
             self.connected = True
             return True
