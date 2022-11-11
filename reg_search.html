@@ -73,8 +73,11 @@ function updateTable() {
         dataType: 'json',
         success: function(data) {
             // Update results-body with new data
-            // FIXME Need to handle errors  
             $('#results-body').replaceWith(data);
+        },
+        error: function(data) { 
+            // Redirect to server error page
+            window.location.href = '/server-error';
         }
     });
 }

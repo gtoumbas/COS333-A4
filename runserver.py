@@ -7,7 +7,7 @@ https://stackoverflow.com/questions/40701973/create-dynamically-html-div-jinja2-
 
 """
 import argparse
-from flask import Flask, render_template, request, make_response, jsonify
+from flask import Flask, render_template, request, make_response, jsonify 
 from reg_db import RegDB
 
 app = Flask(__name__, template_folder='.')
@@ -42,37 +42,30 @@ def get_search_results():
             results = db.search(params)
             db.close()
         except:
-            error_msg = "A server error occurred. " + \
-                "Please contact the system administrator."
-            return make_response(render_template("error.html", error_message=error_msg))
+            response = make_response()
+            response.status_code = 500
+            return response
+
 
     json_html = jsonify(render_template('dynamic_results.html', courses=results))
-    return json_html
+    response = make_response(json_html)
+
+    # Set status code
+    response.status_code = 200
+    return response
+
+@app.route('/server-error')
+def server_error():
+    error_msg = "A server error occurred. " + \
+    "Please contact the system administrator."
+
+    return render_template("error.html", error_message=error_msg)
+
+
 
 @app.route('/', methods=['GET'])
 def home():
     return render_template('reg_search.html') 
-
-
-def get_prevcookies():
-    dept = request.cookies.get("dept") or None
-    num = request.cookies.get("num") or None
-    area = request.cookies.get("area") or None
-    title = request.cookies.get("title") or None
-    inputs = {"dept": dept, "num":num,"area":area, "title":title}
-    return inputs
-
-
-def set_newcookies(response, inputs):
-    if inputs["dept"] is not None:
-        response.set_cookie("dept", inputs["dept"])
-    if inputs["num"] is not None:
-        response.set_cookie("num", inputs["num"])
-    if inputs["area"] is not None:
-        response.set_cookie("area", inputs["area"])
-    if inputs["title"] is not None:
-        response.set_cookie("title", inputs["title"])
-
 
 
 @app.route('/regdetails', methods=['GET'])
