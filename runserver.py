@@ -42,7 +42,9 @@ def get_search_results():
             results = db.search(params)
             db.close()
         except:
-            print("DO SOMETHING") #FIXME 
+            error_msg = "A server error occurred. " + \
+                "Please contact the system administrator."
+            return make_response(render_template("error.html", error_message=error_msg))
 
     json_html = jsonify(render_template('dynamic_results.html', courses=results))
     return json_html

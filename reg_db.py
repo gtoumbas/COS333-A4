@@ -53,7 +53,7 @@ class RegDB:
 
         except Exception as error:
             print(f"{sys.argv[0]}: {error}", file=sys.stderr)
-            return error
+            return
 
     def close(self):
         """
@@ -72,6 +72,7 @@ class RegDB:
         """
         if not self.connected:
             sys.stderr.write("Error: Not connected to database")
+            raise Exception("err")
 
         form_inputs = self.format_inputs(inputs)
         query = self.get_search_query(form_inputs)
