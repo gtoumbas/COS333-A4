@@ -70,6 +70,9 @@ def home():
 
 @app.route('/regdetails', methods=['GET'])
 def details():
+    ADMIN_ERROR_MSG = "A server error occurred. " + \
+    "Please contact the system administrator."
+
     if request.method == 'GET':
         class_id = request.args.get('classid')
 
@@ -90,23 +93,26 @@ def details():
                     error_message=error_message
                 )
 
-        # Handles DB errors
-        connected = db.connect()
-        if not connected:
-            error_message = "A server error occurred. " + \
-            "Please contact the system administrator."
+        try:
+            connected = db.connect()
+            # Get the results
+            results = db.get_details(class_id, as_string=False)
+            db.close()
+        except:
             return render_template(
                 'error.html',
-                error_message=error_message
+                error_message=ADMIN_ERROR_MSG
             )
 
-        # Get the results
-        results = db.get_details(class_id, as_string=False)
-        db.close()
+        if not connected or (results and results[0] == 'ERROR'):
+            return render_template(
+                'error.html',
+                error_message=ADMIN_ERROR_MSG
+            )
 
 
         # Handles invalid class id
-        if results[0]== "INVALID_CLASSID" or results[0] == "ERROR":
+        if results[0]== "INVALID_CLASSID": 
             error_message = f"no class with classid {class_id} exists"
             return render_template(
                 'error.html',

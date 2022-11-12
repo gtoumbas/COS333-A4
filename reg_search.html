@@ -85,6 +85,7 @@ function updateTable() {
 var searchTimeout = null;
 
 // Prevents spamming of database 
+// Based on https://stackoverflow.com/questions/1909441/jquery-keyup-delay
 function delayInput(){
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(function() {
