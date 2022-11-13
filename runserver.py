@@ -13,6 +13,8 @@ from reg_db import RegDB
 app = Flask(__name__, template_folder='.')
 db = RegDB()
 
+ADMIN_ERROR_MSG = "A server error occurred. " + \
+    "Please contact the system administrator."
 
 def main():
     parser = argparse.ArgumentParser(
@@ -36,31 +38,24 @@ def get_search_results():
 
         params = [dept, num, area, title]
 
-        # Handle db error
-        connected = db.connect()
-        results = db.search(params)
-        db.close()
+        try:
+            # Handle db error
+            connected = db.connect()
+            results = db.search(params)
+            db.close()
+        except:
+            error_response = make_response(ADMIN_ERROR_MSG, 500)
+            return error_response
+            
+
         if not connected or (results and results[0] == 'ERROR'):
-            response = make_response()
-            response.status_code = 500
-            return response
-    
+            error_response  = make_response(ADMIN_ERROR_MSG, 500)
+            return error_response
 
 
         json_html = jsonify(render_template('dynamic_results.html', courses=results))
-        response = make_response(json_html)
-
-        # Set status code
-        response.status_code = 200
+        response = make_response(json_html, 200)
         return response
-
-@app.route('/server-error')
-def server_error():
-    error_msg = "A server error occurred. " + \
-    "Please contact the system administrator."
-
-    return render_template("error.html", error_message=error_msg)
-
 
 
 @app.route('/', methods=['GET'])
@@ -70,9 +65,6 @@ def home():
 
 @app.route('/regdetails', methods=['GET'])
 def details():
-    ADMIN_ERROR_MSG = "A server error occurred. " + \
-    "Please contact the system administrator."
-
     if request.method == 'GET':
         class_id = request.args.get('classid')
 
@@ -95,7 +87,6 @@ def details():
 
         try:
             connected = db.connect()
-            # Get the results
             results = db.get_details(class_id, as_string=False)
             db.close()
         except:
@@ -147,7 +138,6 @@ def details():
         # Sort the dept_num and profs by alphabetical order
         course_results["dept_num"] = sorted(course_results["dept_num"])
         course_results["profs"] = sorted(course_results["profs"])
-
 
         return render_template('reg_details.html', \
             course=course_results)
