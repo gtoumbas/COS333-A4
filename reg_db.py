@@ -98,7 +98,7 @@ class RegDB:
         if not self.connected:
             print("Error: Not connected to database", file=sys.stderr)
             return ["ERROR", class_id]
-            
+
         if not str(class_id).isdigit():
             print(f"Error: Invalid class ID: {class_id}",
             file=sys.stderr)

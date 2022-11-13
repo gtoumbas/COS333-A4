@@ -1,13 +1,20 @@
 """
-Authors: Shanzay Waseem, George Toumbas   
+Authors: Shanzay Waseem, George Toumbas
 
-Source for jinja implementation idea: 
+Source for jinja implementation idea:
 https://stackoverflow.com/questions/40701973/create-dynamically-html-div-jinja2-and-ajax
 
 
 """
 import argparse
-from flask import Flask, render_template, request, make_response, jsonify 
+import sys
+from flask import (
+    Flask,
+    render_template,
+    request,
+    make_response,
+    jsonify
+)
 from reg_db import RegDB
 
 app = Flask(__name__, template_folder='.')
@@ -43,24 +50,28 @@ def get_search_results():
             connected = db.connect()
             results = db.search(params)
             db.close()
-        except:
+        except Exception as exception:
+            print(f"Exception: \n {exception}", file=sys.stderr)
             error_response = make_response(ADMIN_ERROR_MSG, 500)
             return error_response
-            
+
 
         if not connected or (results and results[0] == 'ERROR'):
             error_response  = make_response(ADMIN_ERROR_MSG, 500)
             return error_response
 
 
-        json_html = jsonify(render_template('dynamic_results.html', courses=results))
+        json_html = jsonify(render_template(
+            'dynamic_results.html',
+            courses=results
+            ))
         response = make_response(json_html, 200)
         return response
 
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('reg_search.html') 
+    return render_template('reg_search.html')
 
 
 @app.route('/regdetails', methods=['GET'])
@@ -89,7 +100,8 @@ def details():
             connected = db.connect()
             results = db.get_details(class_id, as_string=False)
             db.close()
-        except:
+        except Exception as exception:
+            print(f"Exception: \n {exception}", file=sys.stderr)
             return render_template(
                 'error.html',
                 error_message=ADMIN_ERROR_MSG
@@ -103,7 +115,7 @@ def details():
 
 
         # Handles invalid class id
-        if results[0]== "INVALID_CLASSID": 
+        if results[0]== "INVALID_CLASSID":
             error_message = f"no class with classid {class_id} exists"
             return render_template(
                 'error.html',
